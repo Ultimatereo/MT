@@ -1,5 +1,4 @@
 import lexic.LexicalAnalyzer;
-import lexic.token.token.Token;
 import lexic.token.token.TokenEnum;
 
 import java.io.*;
@@ -7,10 +6,23 @@ import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 
 public class Main {
-    public static void main(String[] args) throws ParseException {
-        String test = "public inline Int.fun<T>(a: (List<Int?>, T) -> Int, aboba: Int = 1000, biba: String = \"aboba\") -> Unit";
-        testLexic(test);
-//        testParse(test);
+    public static void main(String[] args) {
+        String[] tests =
+                {
+                        "public inline fun aboba(a: Int, b: Int, c: String) -> Unit",
+                        "public inline fun aboba(a: Int, b: Int, c: String)",
+                        "fun a(d: Int)",
+                        "fun fun(a: Int)",
+                        "protected fun       hey(a: CustomClass, b: CustomClass) -> CustomClass"
+                };
+        for (int i = 0; i < tests.length; i++) {
+            try {
+                //        testLexic(test);
+                testParse(tests[i], i);
+            } catch (IOException | IllegalStateException e) {
+                System.out.println(e.getMessage());
+            }
+        }
     }
 
     private static void testLexic(String test) throws ParseException {
@@ -26,11 +38,11 @@ public class Main {
         }
     }
 
-    private static void testParse(String test) throws IOException {
+    private static void testParse(String test, int i) throws IOException {
         Parser p = new Parser();
-        File dotFile = new File("graph.dot");
+        File dotFile = new File("graph" + i + ".dot");
         parseAnsSaveIfComplete(p, test, dotFile);
-        File pngFile = new File("graph.png");
+        File pngFile = new File("graph" + i + ".png");
         DotToPngConverter.convertDotToPng(dotFile.getPath(), pngFile.getPath());
     }
 
