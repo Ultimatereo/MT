@@ -20,11 +20,21 @@ public enum TokenEnum {
     QUESTION(new Symbol("?")),
     STAR(new Symbol("*")),
     EQUALS(new Symbol("=")),
-    END(new End());
+    END(new End()),
+    NAME,
+    VALUE;
 
-    private final Token token;
+    private Token token;
 
     TokenEnum(Token token) {
+        this.token = token;
+    }
+
+    TokenEnum() {
+        this.token = null;
+    }
+
+    public void setToken(Token token) {
         this.token = token;
     }
 

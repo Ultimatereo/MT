@@ -1,13 +1,13 @@
 package lexic.token.parse;
 
-import lexic.token.token.Token;
+import lexic.token.token.TokenEnum;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class TrieNode {
     private final Map<Character, TrieNode> children;
-    private Token token;
+    private TokenEnum token;
 
     public TrieNode() {
         this.children = new HashMap<>();
@@ -22,11 +22,11 @@ public class TrieNode {
         return token != null;
     }
 
-    public Token token() {
+    public TokenEnum token() {
         return token;
     }
 
-    public void setToken(Token token) {
+    public void setToken(TokenEnum token) {
         this.token = token;
     }
 }

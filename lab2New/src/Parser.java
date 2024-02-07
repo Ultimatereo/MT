@@ -1,4 +1,5 @@
 import lexic.LexicalAnalyzer;
+import lexic.token.token.TokenEnum;
 
 import java.io.InputStream;
 import java.text.ParseException;
@@ -6,52 +7,18 @@ import java.text.ParseException;
 public class Parser {
     LexicalAnalyzer lex;
 
-    //
-//    Tree S() throws ParseException {
-//        switch (lex.curToken()) {
-//            case TokenEnum.LPAREN:
-//                // (
-//                lex.nextToken();
-//                // S
-//                Tree sub = S();
-//                // )
-//                if (lex.curToken() != TokenEnum.RPAREN) {
-//                    throw new ParseException(") expected at position " + lex.curPos(), lex.curPos());
-//                }
-//                lex.nextToken();
-//                // S ’
-//                Tree cont = SPrime();
-//                return new Tree("S", new Tree("("), sub, new Tree(")"), cont);
-//            case TokenEnum.RPAREN:
-//            case TokenEnum.END:
-//                // eps
-//                return new Tree("S");
-//            default:
-//                throw new AssertionError();
-//        }
-//    }
-//
-//    Tree SPrime() throws ParseException {
-//        switch (lex.curToken()) {
-//            case TokenEnum.LPAREN:
-//                // S
-//                Tree sub = S();
-//                // S ’
-//                Tree cont = SPrime();
-//                return new Tree("S’", sub, cont);
-//            case TokenEnum.RPAREN:
-//            case TokenEnum.END:
-//                // eps
-//                return new Tree("S’");
-//            default:
-//                throw new AssertionError();
-//        }
-//    }
-//
-    Tree parse(InputStream is) throws ParseException {
+
+    Tree S() throws ParseException {
         return null;
-//        lex = new LexicalAnalyzer(is);
-//        lex.nextToken();
-//        return S();
+//        switch (lex.curToken()) {
+//            TokenEnum.FUN.token() {
+//            default -> throw new IllegalStateException("Unexpected value: " + lex.curToken());
+//        }
+    }
+
+    Tree parse(InputStream is) throws ParseException {
+        lex = new LexicalAnalyzer(is);
+        lex.nextToken();
+        return S();
     }
 }

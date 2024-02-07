@@ -18,9 +18,9 @@ public class Main {
         LexicalAnalyzer la = new LexicalAnalyzer(is);
         while (true) {
             la.nextToken();
-            Token token = la.curToken();
-            System.out.println("Parsed " + token + ": " + token.value());
-            if (token == TokenEnum.END.token()) {
+            TokenEnum token = la.curToken();
+            System.out.println("Parsed " + token + ": " + token.token().value());
+            if (token == TokenEnum.END) {
                 break;
             }
         }

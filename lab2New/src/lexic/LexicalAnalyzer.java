@@ -20,7 +20,7 @@ public class LexicalAnalyzer {
     private final TrieNode root;
     private int curChar;
     private int curPos;
-    private Token curToken;
+    private TokenEnum curToken;
 
     public LexicalAnalyzer(InputStream is) throws ParseException {
         this.is = is;
@@ -71,7 +71,7 @@ public class LexicalAnalyzer {
 
     private void parse() throws ParseException {
         if (curChar == 0) {
-            curToken = TokenEnum.END.token();
+            curToken = TokenEnum.END;
             return;
         }
         StringBuilder sb = new StringBuilder();
@@ -90,7 +90,7 @@ public class LexicalAnalyzer {
         String s = sb.toString();
         for (TokenFactoryEnum tokenFactoryEnum : TokenFactoryEnum.values()) {
             TokenRegexFactory tokenFactory = tokenFactoryEnum.tokenFactory();
-            Token token = tokenFactory.createToken(s);
+            TokenEnum token = tokenFactory.createToken(s);
             if (token != null) {
                 curToken = token;
                 return true;
@@ -105,7 +105,7 @@ public class LexicalAnalyzer {
             char c = (char) curChar;
             if (curNode.isEnd()) {
                 curToken = curNode.token();
-                return curToken instanceof Symbol || curChar == 0 || isBlank(curChar) || isStartOfSymbol(curChar);
+                return curToken.token() instanceof Symbol || curChar == 0 || isBlank(curChar) || isStartOfSymbol(curChar);
             }
             if (curNode.children().containsKey(c)) {
                 curNode = curNode.children().get(c);
@@ -117,11 +117,7 @@ public class LexicalAnalyzer {
         }
     }
 
-    public Token curToken() {
+    public TokenEnum curToken() {
         return curToken;
-    }
-
-    public int curPos() {
-        return curPos;
     }
 }
