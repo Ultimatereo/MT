@@ -13,7 +13,7 @@ public class DotToPngConverter {
 
             // Wait for the process to complete
             int exitCode = process.waitFor();
-            System.out.println("Exit Code: " + exitCode);
+//            System.out.println("Exit Code: " + exitCode);
 
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();

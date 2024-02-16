@@ -19,7 +19,7 @@ public class Parser {
                 return new Tree("S", new Tree("M", new Tree(startToken.token().value())), sub);
             }
             case TokenEnum.FUN -> {
-//                Tree subG = G();
+                Tree subG = G();
                 Tree subFN = FN();
                 assert lex.curToken() == TokenEnum.LPAREN;
                 lex.nextToken();
@@ -29,7 +29,7 @@ public class Parser {
                 Tree subRT = RT();
                 return new Tree("S",
                         new Tree("fun"),
-//                        subG,
+                        subG,
                         subFN,
                         new Tree("("),
                         subFA,
@@ -40,22 +40,65 @@ public class Parser {
         }
     }
 
+    private Tree G() throws ParseException {
+        TokenEnum startToken = lex.curToken();
+        if (Objects.requireNonNull(startToken) == TokenEnum.LCHEVRON) {
+            lex.nextToken();
+            assert lex.curToken() == TokenEnum.NAME;
+            String name = lex.curToken().token().value();
+            lex.nextToken();
+            Tree subGC = GC();
+            assert lex.curToken() == TokenEnum.RCHEVRON;
+            lex.nextToken();
+            return new Tree("G",
+                    new Tree("<"),
+                    new Tree(name),
+                    subGC,
+                    new Tree(">")
+            );
+        }
+        return new Tree("G");
+    }
+
+    private Tree GC() throws ParseException {
+        TokenEnum startToken = lex.curToken();
+        if (Objects.requireNonNull(startToken) == TokenEnum.COMMA) {
+            lex.nextToken();
+            assert lex.curToken() == TokenEnum.NAME;
+            String name = lex.curToken().token().value();
+            lex.nextToken();
+            Tree subGC = GC();
+            return new Tree("GC",
+                    new Tree(","),
+                    new Tree(name),
+                    subGC
+            );
+        }
+        return new Tree("GC");
+    }
+
     private Tree FA() throws ParseException {
         TokenEnum startToken = lex.curToken();
         String name = startToken.token().value();
-        lex.nextToken();
-        if (Objects.requireNonNull(startToken) == TokenEnum.NAME) {
-            assert lex.curToken() == TokenEnum.COLON;
-            lex.nextToken();
-            Tree subT = T();
-            Tree subFAC = FAC();
-            return new Tree("FA",
-                    new Tree(name),
-                    new Tree(":"),
-                    subT,
-                    subFAC);
+        switch (startToken) {
+            case TokenEnum.NAME -> {
+                lex.nextToken();
+                assert lex.curToken() == TokenEnum.COLON;
+                lex.nextToken();
+                Tree subT = T();
+                Tree subFAC = FAC();
+                return new Tree("FA",
+                        new Tree(name),
+                        new Tree(":"),
+                        subT,
+                        subFAC);
+            }
+
+            case TokenEnum.RPAREN -> {
+                return new Tree("FA");
+            }
+            default -> throw new IllegalStateException("Unexpected value: " + lex.curToken());
         }
-        return new Tree("FA");
     }
 
     private Tree FAC() throws ParseException {
@@ -82,9 +125,10 @@ public class Parser {
 
     private Tree FN() throws ParseException {
         TokenEnum startToken = lex.curToken();
+        String name = startToken.token().value();
         lex.nextToken();
         if (Objects.requireNonNull(startToken) == TokenEnum.NAME) {
-            return new Tree("FN", new Tree(startToken.token().value()));
+            return new Tree("FN", new Tree(name));
         }
         throw new IllegalStateException("Unexpected value: " + lex.curToken());
     }
@@ -103,11 +147,66 @@ public class Parser {
 
     private Tree T() throws ParseException {
         TokenEnum startToken = lex.curToken();
+        String name = startToken.token().value();
         lex.nextToken();
         if (Objects.requireNonNull(startToken) == TokenEnum.NAME) {
-            return new Tree("T", new Tree(startToken.token().value()));
+            Tree subGP = GP();
+            return new Tree(
+                    "T",
+                    new Tree(name),
+                    subGP
+            );
         }
         throw new IllegalStateException("Unexpected value: " + lex.curToken());
+    }
+
+
+    private Tree GP() throws ParseException {
+        TokenEnum startToken = lex.curToken();
+        if (Objects.requireNonNull(startToken) == TokenEnum.LCHEVRON) {
+            lex.nextToken();
+            Tree subGT = GT();
+            Tree subGPC = GPC();
+            assert lex.curToken() == TokenEnum.RCHEVRON;
+            lex.nextToken();
+            return new Tree("GP",
+                    new Tree("<"),
+                    subGT,
+                    subGPC,
+                    new Tree(">")
+            );
+        }
+        return new Tree("GP");
+    }
+
+    private Tree GPC() throws ParseException {
+        TokenEnum startToken = lex.curToken();
+        if (Objects.requireNonNull(startToken) == TokenEnum.COMMA) {
+            lex.nextToken();
+            Tree subGT = GT();
+            Tree subGPC = GPC();
+            return new Tree("GPC",
+                    new Tree(","),
+                    subGT,
+                    subGPC
+            );
+        }
+        return new Tree("GPC");
+    }
+
+    private Tree GT() throws ParseException {
+        TokenEnum startToken = lex.curToken();
+        switch (startToken) {
+            case TokenEnum.STAR -> {
+                lex.nextToken();
+                return new Tree("GT", new Tree("*"));
+            }
+            case TokenEnum.NAME -> {
+                Tree subT = T();
+                return new Tree("GT", subT);
+            }
+            default -> throw new IllegalStateException("Unexpected value: " + lex.curToken());
+        }
     }
 
     Tree parse(InputStream is) throws ParseException {

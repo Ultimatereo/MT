@@ -13,7 +13,8 @@ public class Main {
                         "public inline fun aboba(a: Int, b: Int, c: String)",
                         "fun a(d: Int)",
                         "fun fun(a: Int)",
-                        "protected fun       hey(a: CustomClass, b: CustomClass) -> CustomClass"
+                        "protected fun       hey(a: CustomClass, b: CustomClass) -> CustomClass",
+                        "fun <a, b> greatFunction(element1 : ArrayList<a>, function1 : BiFunction<a, b, *>, element2: List<Int>) : Boolean"
                 };
         for (int i = 0; i < tests.length; i++) {
             try {
@@ -55,8 +56,10 @@ public class Main {
                 t.writeUsing(writer);
                 writer.write("}");
             }
+            System.out.println("\"" + test + "\"" + " is parsed successfully.\n");
         } catch (ParseException e) {
-            System.out.println(e.getMessage());
+            System.out.println("Error happened during parsing expression: \"" + test + "\"");
+            System.out.println(e.getMessage() + "\n");
         }
     }
 }
