@@ -8,11 +8,19 @@ surface_function: function;
 
 function: LPAREN function_body RPAREN;
 
-function_body : ns | defn | arithmetic_function | general_function | compare_function;
+function_body : ns | defn | let | arithmetic_function | general_function | compare_function;
 
 ns: NS ID;
 
 defn: DEFN ID LBRACKET args_ids RBRACKET form;
+
+let: LET LBRACKET bindings RBRACKET exprs;
+
+bindings: binding*;
+
+binding: ID form;
+
+exprs: function*;
 
 arithmetic_function: operation form*;
 
@@ -53,6 +61,7 @@ RBRACKET: ']';
 // Ключевые слова
 DEFN: 'd' 'e' 'f' 'n';
 NS: 'n' 's';
+LET: 'l' 'e' 't';
 
 // Правила для идентификаторов, чисел и строк
 ID: [a-zA-Z][a-zA-Z0-9-]*;

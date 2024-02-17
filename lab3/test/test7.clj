@@ -1,4 +1,5 @@
 (ns test7)
 
-(def hello (fn [] "Hello world"))
-(hello)
+(let [x 1
+      y 1]
+  (print (+ x y)))

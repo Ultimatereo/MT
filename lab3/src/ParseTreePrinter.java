@@ -20,7 +20,17 @@ public class ParseTreePrinter {
     }
 
     public static void main(String[] args) {
-        String input = "(defn add [x y] (+ x y))\n(print (add 2 3))";
+        String input = """
+                (ns test9)
+                                
+                (let [x 1
+                      y 1
+                      s (+ x y)]
+                  (print (* s 10))
+                  )
+                                
+                (let [] (print 24))
+                """;
         ClojureLexer lexer = new ClojureLexer(CharStreams.fromString(input));
         CommonTokenStream tokens = new CommonTokenStream(lexer);
 //        tokens.fill();

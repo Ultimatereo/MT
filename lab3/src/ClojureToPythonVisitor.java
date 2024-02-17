@@ -87,4 +87,18 @@ class ClojureToPythonVisitor extends ClojureBaseVisitor<String> {
         }
         return args_ids;
     }
+
+    @Override
+    public String visitLet(ClojureParser.LetContext ctx) {
+        String bindings = visit(ctx.children.get(2));
+        String exprs = visit(ctx.children.getLast());
+        return bindings + exprs;
+    }
+
+    @Override
+    public String visitBinding(ClojureParser.BindingContext ctx) {
+        String var = ctx.children.get(0).getText();
+        String value = visit(ctx.children.get(1));
+        return var + "=" + value + "\n";
+    }
 }
