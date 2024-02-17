@@ -1,0 +1,1 @@
+antlr4 -visitor -o  .\antlr\parser\ -package antlr.parser .\Clojure.g4
