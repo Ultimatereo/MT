@@ -1,4 +1,4 @@
-(ns test1)
+(ns test7)
 
 (def hello (fn [] "Hello world"))
 (hello)

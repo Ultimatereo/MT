@@ -1,4 +1,5 @@
-import antlr.parser.*;
+import antlr.parser.ClojureBaseVisitor;
+import antlr.parser.ClojureParser;
 import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.TerminalNode;
@@ -29,6 +30,11 @@ class ClojureToPythonVisitor extends ClojureBaseVisitor<String> {
     public String visitSurface_function(ClojureParser.Surface_functionContext ctx) {
         String function = visit(ctx.children.get(0));
         return function + "\n";
+    }
+
+    @Override
+    public String visitNs(ClojureParser.NsContext ctx) {
+        return "";
     }
 
     @Override
@@ -64,7 +70,7 @@ class ClojureToPythonVisitor extends ClojureBaseVisitor<String> {
 
     @Override
     public String visitCompare_function(ClojureParser.Compare_functionContext ctx) {
-        return visit(ctx.children.get(1)) + ctx.children.get(0).getText() + visit(ctx.children.get(2));
+        return "(" + visit(ctx.children.get(1)) + ctx.children.get(0).getText() + visit(ctx.children.get(2)) + ")";
     }
 
     @Override

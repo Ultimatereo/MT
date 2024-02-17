@@ -1,4 +1,5 @@
-import antlr.parser.*;
+import antlr.parser.ClojureLexer;
+import antlr.parser.ClojureParser;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
