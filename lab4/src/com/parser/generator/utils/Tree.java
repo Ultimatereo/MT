@@ -10,12 +10,13 @@ import java.util.List;
 
 public class Tree<T> {
     static int counter = 0;
-    T val;
+    public T val;
     final Element node;
     final int id;
-    List<Tree> children;
+    List<Tree<T>> children;
 
-    public Tree(Element node, Tree... children) {
+    @SafeVarargs
+    public Tree(Element node, Tree<T>... children) {
         this.node = node;
         this.children = Arrays.asList(children);
         this.id = counter++;
@@ -35,7 +36,7 @@ public class Tree<T> {
 
     public void writeUsing(BufferedWriter writer) throws IOException {
         writeNode(this.toString(), node, writer);
-        for (Tree child : children) {
+        for (Tree<T> child : children) {
             writeNode(child.toString(), child.node, writer);
             writeEdge(this.toString(), child.toString(), writer);
             child.writeUsing(writer);

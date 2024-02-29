@@ -31,359 +31,466 @@ public class ClojureParser {
 	);
 	LexicalAnalyzer lex;
 
-	public Tree parse(InputStream is) throws ParseException {
+	public Tree<Integer> parse(InputStream is) throws ParseException {
 		lex = new LexicalAnalyzer(is, factoryTokens, simpleTokens);
 		lex.nextToken();
 		return P();
 	}
-	private Tree OP() throws ParseException {
+	private Tree<Integer> OP(Integer... values) throws ParseException {
 		switch (lex.curToken().name()) {
 			case "+" -> {
 				assert lex.curToken().name().equals("+");
-				Tree token1 = new Tree(lex.curToken());
+				Tree<Integer> token1 = new Tree(lex.curToken());
+				Integer value1 = token1.val();
 				lex.nextToken();
-				return new Tree(new NonTerminal("OP"), token1);
+				// TODO Count value of this node
+				return new Tree<Integer>(new NonTerminal("OP"), token1);
 			}
 			case "*" -> {
 				assert lex.curToken().name().equals("*");
-				Tree token1 = new Tree(lex.curToken());
+				Tree<Integer> token1 = new Tree(lex.curToken());
+				Integer value1 = token1.val();
 				lex.nextToken();
-				return new Tree(new NonTerminal("OP"), token1);
+				// TODO Count value of this node
+				return new Tree<Integer>(new NonTerminal("OP"), token1);
 			}
 			case "/" -> {
 				assert lex.curToken().name().equals("/");
-				Tree token1 = new Tree(lex.curToken());
+				Tree<Integer> token1 = new Tree(lex.curToken());
+				Integer value1 = token1.val();
 				lex.nextToken();
-				return new Tree(new NonTerminal("OP"), token1);
+				// TODO Count value of this node
+				return new Tree<Integer>(new NonTerminal("OP"), token1);
 			}
 			case "-" -> {
 				assert lex.curToken().name().equals("-");
-				Tree token1 = new Tree(lex.curToken());
+				Tree<Integer> token1 = new Tree(lex.curToken());
+				Integer value1 = token1.val();
 				lex.nextToken();
-				return new Tree(new NonTerminal("OP"), token1);
+				// TODO Count value of this node
+				return new Tree<Integer>(new NonTerminal("OP"), token1);
 			}
 			default -> throw new IllegalStateException("Unexpected value: " + lex.curToken());
 		}
 
 	}
 
-	private Tree B() throws ParseException {
+	private Tree<Integer> B(Integer... values) throws ParseException {
 		switch (lex.curToken().name()) {
 			case "id" -> {
 				assert lex.curToken().name().equals("id");
-				Tree token1 = new Tree(lex.curToken());
+				Tree<Integer> token1 = new Tree(lex.curToken());
+				Integer value1 = token1.val();
 				lex.nextToken();
-				Tree FORM2 = FORM();
-				return new Tree(new NonTerminal("B"), token1, FORM2);
+				Tree<Integer> FORM2 = FORM(value1);
+				Integer value2 = FORM2.val();
+				// TODO Count value of this node
+				return new Tree<Integer>(new NonTerminal("B"), token1, FORM2);
 			}
 			default -> throw new IllegalStateException("Unexpected value: " + lex.curToken());
 		}
 
 	}
 
-	private Tree NS() throws ParseException {
+	private Tree<Integer> NS(Integer... values) throws ParseException {
 		switch (lex.curToken().name()) {
 			case "NS" -> {
 				assert lex.curToken().name().equals("NS");
-				Tree token1 = new Tree(lex.curToken());
+				Tree<Integer> token1 = new Tree(lex.curToken());
+				Integer value1 = token1.val();
 				lex.nextToken();
 				assert lex.curToken().name().equals("id");
-				Tree token2 = new Tree(lex.curToken());
+				Tree<Integer> token2 = new Tree(lex.curToken());
+				Integer value2 = token2.val();
 				lex.nextToken();
-				return new Tree(new NonTerminal("NS"), token1, token2);
+				// TODO Count value of this node
+				return new Tree<Integer>(new NonTerminal("NS"), token1, token2);
 			}
 			default -> throw new IllegalStateException("Unexpected value: " + lex.curToken());
 		}
 
 	}
 
-	private Tree AF() throws ParseException {
+	private Tree<Integer> AF(Integer... values) throws ParseException {
 		switch (lex.curToken().name()) {
 			case "+" -> {
-				Tree OP1 = OP();
-				Tree FORMM2 = FORMM();
-				return new Tree(new NonTerminal("AF"), OP1, FORMM2);
+				Tree<Integer> OP1 = OP();
+				Integer value1 = OP1.val();
+				Tree<Integer> FORMM2 = FORMM(value1);
+				Integer value2 = FORMM2.val();
+				// TODO Count value of this node
+				return new Tree<Integer>(new NonTerminal("AF"), OP1, FORMM2);
 			}
 			case "*" -> {
-				Tree OP1 = OP();
-				Tree FORMM2 = FORMM();
-				return new Tree(new NonTerminal("AF"), OP1, FORMM2);
+				Tree<Integer> OP1 = OP();
+				Integer value1 = OP1.val();
+				Tree<Integer> FORMM2 = FORMM(value1);
+				Integer value2 = FORMM2.val();
+				// TODO Count value of this node
+				return new Tree<Integer>(new NonTerminal("AF"), OP1, FORMM2);
 			}
 			case "/" -> {
-				Tree OP1 = OP();
-				Tree FORMM2 = FORMM();
-				return new Tree(new NonTerminal("AF"), OP1, FORMM2);
+				Tree<Integer> OP1 = OP();
+				Integer value1 = OP1.val();
+				Tree<Integer> FORMM2 = FORMM(value1);
+				Integer value2 = FORMM2.val();
+				// TODO Count value of this node
+				return new Tree<Integer>(new NonTerminal("AF"), OP1, FORMM2);
 			}
 			case "-" -> {
-				Tree OP1 = OP();
-				Tree FORMM2 = FORMM();
-				return new Tree(new NonTerminal("AF"), OP1, FORMM2);
+				Tree<Integer> OP1 = OP();
+				Integer value1 = OP1.val();
+				Tree<Integer> FORMM2 = FORMM(value1);
+				Integer value2 = FORMM2.val();
+				// TODO Count value of this node
+				return new Tree<Integer>(new NonTerminal("AF"), OP1, FORMM2);
 			}
 			default -> throw new IllegalStateException("Unexpected value: " + lex.curToken());
 		}
 
 	}
 
-	private Tree FORM() throws ParseException {
+	private Tree<Integer> FORM(Integer... values) throws ParseException {
 		switch (lex.curToken().name()) {
 			case "id" -> {
-				Tree ATOM1 = ATOM();
-				return new Tree(new NonTerminal("FORM"), ATOM1);
+				Tree<Integer> ATOM1 = ATOM();
+				Integer value1 = ATOM1.val();
+				// TODO Count value of this node
+				return new Tree<Integer>(new NonTerminal("FORM"), ATOM1);
 			}
 			case "(" -> {
-				Tree F1 = F();
-				return new Tree(new NonTerminal("FORM"), F1);
+				Tree<Integer> F1 = F();
+				Integer value1 = F1.val();
+				// TODO Count value of this node
+				return new Tree<Integer>(new NonTerminal("FORM"), F1);
 			}
 			case "number" -> {
-				Tree ATOM1 = ATOM();
-				return new Tree(new NonTerminal("FORM"), ATOM1);
+				Tree<Integer> ATOM1 = ATOM();
+				Integer value1 = ATOM1.val();
+				// TODO Count value of this node
+				return new Tree<Integer>(new NonTerminal("FORM"), ATOM1);
 			}
 			case "string" -> {
-				Tree ATOM1 = ATOM();
-				return new Tree(new NonTerminal("FORM"), ATOM1);
+				Tree<Integer> ATOM1 = ATOM();
+				Integer value1 = ATOM1.val();
+				// TODO Count value of this node
+				return new Tree<Integer>(new NonTerminal("FORM"), ATOM1);
 			}
 			default -> throw new IllegalStateException("Unexpected value: " + lex.curToken());
 		}
 
 	}
 
-	private Tree F() throws ParseException {
+	private Tree<Integer> F(Integer... values) throws ParseException {
 		switch (lex.curToken().name()) {
 			case "(" -> {
 				assert lex.curToken().name().equals("(");
-				Tree token1 = new Tree(lex.curToken());
+				Tree<Integer> token1 = new Tree(lex.curToken());
+				Integer value1 = token1.val();
 				lex.nextToken();
-				Tree FB2 = FB();
+				Tree<Integer> FB2 = FB(value1);
+				Integer value2 = FB2.val();
 				assert lex.curToken().name().equals(")");
-				Tree token3 = new Tree(lex.curToken());
+				Tree<Integer> token3 = new Tree(lex.curToken());
+				Integer value3 = token3.val();
 				lex.nextToken();
-				return new Tree(new NonTerminal("F"), token1, FB2, token3);
+				// TODO Count value of this node
+				return new Tree<Integer>(new NonTerminal("F"), token1, FB2, token3);
 			}
 			default -> throw new IllegalStateException("Unexpected value: " + lex.curToken());
 		}
 
 	}
 
-	private Tree AI() throws ParseException {
+	private Tree<Integer> AI(Integer... values) throws ParseException {
 		switch (lex.curToken().name()) {
 			case "id" -> {
 				assert lex.curToken().name().equals("id");
-				Tree token1 = new Tree(lex.curToken());
+				Tree<Integer> token1 = new Tree(lex.curToken());
+				Integer value1 = token1.val();
 				lex.nextToken();
-				Tree AI2 = AI();
-				return new Tree(new NonTerminal("AI"), token1, AI2);
+				Tree<Integer> AI2 = AI(value1);
+				Integer value2 = AI2.val();
+				// TODO Count value of this node
+				return new Tree<Integer>(new NonTerminal("AI"), token1, AI2);
 			}
 			case "]" -> {
-				return new Tree(new NonTerminal("AI"));
+				// TODO Count value of this node
+				return new Tree<Integer>(new NonTerminal("AI"));
 			}
 			default -> throw new IllegalStateException("Unexpected value: " + lex.curToken());
 		}
 
 	}
 
-	private Tree ES() throws ParseException {
+	private Tree<Integer> ES(Integer... values) throws ParseException {
 		switch (lex.curToken().name()) {
 			case "(" -> {
-				Tree F1 = F();
-				Tree ES2 = ES();
-				return new Tree(new NonTerminal("ES"), F1, ES2);
+				Tree<Integer> F1 = F();
+				Integer value1 = F1.val();
+				Tree<Integer> ES2 = ES(value1);
+				Integer value2 = ES2.val();
+				// TODO Count value of this node
+				return new Tree<Integer>(new NonTerminal("ES"), F1, ES2);
 			}
 			case ")" -> {
-				return new Tree(new NonTerminal("ES"));
+				// TODO Count value of this node
+				return new Tree<Integer>(new NonTerminal("ES"));
 			}
 			default -> throw new IllegalStateException("Unexpected value: " + lex.curToken());
 		}
 
 	}
 
-	private Tree ATOM() throws ParseException {
+	private Tree<Integer> ATOM(Integer... values) throws ParseException {
 		switch (lex.curToken().name()) {
 			case "id" -> {
 				assert lex.curToken().name().equals("id");
-				Tree token1 = new Tree(lex.curToken());
+				Tree<Integer> token1 = new Tree(lex.curToken());
+				Integer value1 = token1.val();
 				lex.nextToken();
-				return new Tree(new NonTerminal("ATOM"), token1);
+				// TODO Count value of this node
+				return new Tree<Integer>(new NonTerminal("ATOM"), token1);
 			}
 			case "number" -> {
 				assert lex.curToken().name().equals("number");
-				Tree token1 = new Tree(lex.curToken());
+				Tree<Integer> token1 = new Tree(lex.curToken());
+				Integer value1 = token1.val();
 				lex.nextToken();
-				return new Tree(new NonTerminal("ATOM"), token1);
+				// TODO Count value of this node
+				return new Tree<Integer>(new NonTerminal("ATOM"), token1);
 			}
 			case "string" -> {
 				assert lex.curToken().name().equals("string");
-				Tree token1 = new Tree(lex.curToken());
+				Tree<Integer> token1 = new Tree(lex.curToken());
+				Integer value1 = token1.val();
 				lex.nextToken();
-				return new Tree(new NonTerminal("ATOM"), token1);
+				// TODO Count value of this node
+				return new Tree<Integer>(new NonTerminal("ATOM"), token1);
 			}
 			default -> throw new IllegalStateException("Unexpected value: " + lex.curToken());
 		}
 
 	}
 
-	private Tree P() throws ParseException {
+	private Tree<Integer> P(Integer... values) throws ParseException {
 		switch (lex.curToken().name()) {
 			case "(" -> {
-				Tree SF1 = SF();
-				Tree P2 = P();
-				return new Tree(new NonTerminal("P"), SF1, P2);
+				Tree<Integer> SF1 = SF();
+				Integer value1 = SF1.val();
+				Tree<Integer> P2 = P(value1);
+				Integer value2 = P2.val();
+				// TODO Count value of this node
+				return new Tree<Integer>(new NonTerminal("P"), SF1, P2);
 			}
 			case "$" -> {
-				return new Tree(new NonTerminal("P"));
+				// TODO Count value of this node
+				return new Tree<Integer>(new NonTerminal("P"));
 			}
 			default -> throw new IllegalStateException("Unexpected value: " + lex.curToken());
 		}
 
 	}
 
-	private Tree BS() throws ParseException {
+	private Tree<Integer> BS(Integer... values) throws ParseException {
 		switch (lex.curToken().name()) {
 			case "id" -> {
-				Tree B1 = B();
-				Tree BS2 = BS();
-				return new Tree(new NonTerminal("BS"), B1, BS2);
+				Tree<Integer> B1 = B();
+				Integer value1 = B1.val();
+				Tree<Integer> BS2 = BS(value1);
+				Integer value2 = BS2.val();
+				// TODO Count value of this node
+				return new Tree<Integer>(new NonTerminal("BS"), B1, BS2);
 			}
 			case "]" -> {
-				return new Tree(new NonTerminal("BS"));
+				// TODO Count value of this node
+				return new Tree<Integer>(new NonTerminal("BS"));
 			}
 			default -> throw new IllegalStateException("Unexpected value: " + lex.curToken());
 		}
 
 	}
 
-	private Tree SF() throws ParseException {
+	private Tree<Integer> SF(Integer... values) throws ParseException {
 		switch (lex.curToken().name()) {
 			case "(" -> {
-				Tree F1 = F();
-				return new Tree(new NonTerminal("SF"), F1);
+				Tree<Integer> F1 = F();
+				Integer value1 = F1.val();
+				// TODO Count value of this node
+				return new Tree<Integer>(new NonTerminal("SF"), F1);
 			}
 			default -> throw new IllegalStateException("Unexpected value: " + lex.curToken());
 		}
 
 	}
 
-	private Tree DEFN() throws ParseException {
+	private Tree<Integer> DEFN(Integer... values) throws ParseException {
 		switch (lex.curToken().name()) {
 			case "DEFN" -> {
 				assert lex.curToken().name().equals("DEFN");
-				Tree token1 = new Tree(lex.curToken());
+				Tree<Integer> token1 = new Tree(lex.curToken());
+				Integer value1 = token1.val();
 				lex.nextToken();
 				assert lex.curToken().name().equals("id");
-				Tree token2 = new Tree(lex.curToken());
+				Tree<Integer> token2 = new Tree(lex.curToken());
+				Integer value2 = token2.val();
 				lex.nextToken();
 				assert lex.curToken().name().equals("[");
-				Tree token3 = new Tree(lex.curToken());
+				Tree<Integer> token3 = new Tree(lex.curToken());
+				Integer value3 = token3.val();
 				lex.nextToken();
-				Tree AI4 = AI();
+				Tree<Integer> AI4 = AI(value1, value2, value3);
+				Integer value4 = AI4.val();
 				assert lex.curToken().name().equals("]");
-				Tree token5 = new Tree(lex.curToken());
+				Tree<Integer> token5 = new Tree(lex.curToken());
+				Integer value5 = token5.val();
 				lex.nextToken();
-				Tree FORM6 = FORM();
-				return new Tree(new NonTerminal("DEFN"), token1, token2, token3, AI4, token5, FORM6);
+				Tree<Integer> FORM6 = FORM(value1, value2, value3, value4, value5);
+				Integer value6 = FORM6.val();
+				// TODO Count value of this node
+				return new Tree<Integer>(new NonTerminal("DEFN"), token1, token2, token3, AI4, token5, FORM6);
 			}
 			default -> throw new IllegalStateException("Unexpected value: " + lex.curToken());
 		}
 
 	}
 
-	private Tree FORMM() throws ParseException {
+	private Tree<Integer> FORMM(Integer... values) throws ParseException {
 		switch (lex.curToken().name()) {
 			case "(" -> {
-				Tree FORM1 = FORM();
-				Tree FORMM2 = FORMM();
-				return new Tree(new NonTerminal("FORMM"), FORM1, FORMM2);
+				Tree<Integer> FORM1 = FORM();
+				Integer value1 = FORM1.val();
+				Tree<Integer> FORMM2 = FORMM(value1);
+				Integer value2 = FORMM2.val();
+				// TODO Count value of this node
+				return new Tree<Integer>(new NonTerminal("FORMM"), FORM1, FORMM2);
 			}
 			case "id" -> {
-				Tree FORM1 = FORM();
-				Tree FORMM2 = FORMM();
-				return new Tree(new NonTerminal("FORMM"), FORM1, FORMM2);
+				Tree<Integer> FORM1 = FORM();
+				Integer value1 = FORM1.val();
+				Tree<Integer> FORMM2 = FORMM(value1);
+				Integer value2 = FORMM2.val();
+				// TODO Count value of this node
+				return new Tree<Integer>(new NonTerminal("FORMM"), FORM1, FORMM2);
 			}
 			case "number" -> {
-				Tree FORM1 = FORM();
-				Tree FORMM2 = FORMM();
-				return new Tree(new NonTerminal("FORMM"), FORM1, FORMM2);
+				Tree<Integer> FORM1 = FORM();
+				Integer value1 = FORM1.val();
+				Tree<Integer> FORMM2 = FORMM(value1);
+				Integer value2 = FORMM2.val();
+				// TODO Count value of this node
+				return new Tree<Integer>(new NonTerminal("FORMM"), FORM1, FORMM2);
 			}
 			case ")" -> {
-				return new Tree(new NonTerminal("FORMM"));
+				// TODO Count value of this node
+				return new Tree<Integer>(new NonTerminal("FORMM"));
 			}
 			case "string" -> {
-				Tree FORM1 = FORM();
-				Tree FORMM2 = FORMM();
-				return new Tree(new NonTerminal("FORMM"), FORM1, FORMM2);
+				Tree<Integer> FORM1 = FORM();
+				Integer value1 = FORM1.val();
+				Tree<Integer> FORMM2 = FORMM(value1);
+				Integer value2 = FORMM2.val();
+				// TODO Count value of this node
+				return new Tree<Integer>(new NonTerminal("FORMM"), FORM1, FORMM2);
 			}
 			default -> throw new IllegalStateException("Unexpected value: " + lex.curToken());
 		}
 
 	}
 
-	private Tree LET() throws ParseException {
+	private Tree<Integer> LET(Integer... values) throws ParseException {
 		switch (lex.curToken().name()) {
 			case "LET" -> {
 				assert lex.curToken().name().equals("LET");
-				Tree token1 = new Tree(lex.curToken());
+				Tree<Integer> token1 = new Tree(lex.curToken());
+				Integer value1 = token1.val();
 				lex.nextToken();
 				assert lex.curToken().name().equals("[");
-				Tree token2 = new Tree(lex.curToken());
+				Tree<Integer> token2 = new Tree(lex.curToken());
+				Integer value2 = token2.val();
 				lex.nextToken();
-				Tree BS3 = BS();
+				Tree<Integer> BS3 = BS(value1, value2);
+				Integer value3 = BS3.val();
 				assert lex.curToken().name().equals("]");
-				Tree token4 = new Tree(lex.curToken());
+				Tree<Integer> token4 = new Tree(lex.curToken());
+				Integer value4 = token4.val();
 				lex.nextToken();
-				Tree ES5 = ES();
-				return new Tree(new NonTerminal("LET"), token1, token2, BS3, token4, ES5);
+				Tree<Integer> ES5 = ES(value1, value2, value3, value4);
+				Integer value5 = ES5.val();
+				// TODO Count value of this node
+				return new Tree<Integer>(new NonTerminal("LET"), token1, token2, BS3, token4, ES5);
 			}
 			default -> throw new IllegalStateException("Unexpected value: " + lex.curToken());
 		}
 
 	}
 
-	private Tree FB() throws ParseException {
+	private Tree<Integer> FB(Integer... values) throws ParseException {
 		switch (lex.curToken().name()) {
 			case "+" -> {
-				Tree AF1 = AF();
-				return new Tree(new NonTerminal("FB"), AF1);
+				Tree<Integer> AF1 = AF();
+				Integer value1 = AF1.val();
+				// TODO Count value of this node
+				return new Tree<Integer>(new NonTerminal("FB"), AF1);
 			}
 			case "*" -> {
-				Tree AF1 = AF();
-				return new Tree(new NonTerminal("FB"), AF1);
+				Tree<Integer> AF1 = AF();
+				Integer value1 = AF1.val();
+				// TODO Count value of this node
+				return new Tree<Integer>(new NonTerminal("FB"), AF1);
 			}
 			case "LET" -> {
-				Tree LET1 = LET();
-				return new Tree(new NonTerminal("FB"), LET1);
+				Tree<Integer> LET1 = LET();
+				Integer value1 = LET1.val();
+				// TODO Count value of this node
+				return new Tree<Integer>(new NonTerminal("FB"), LET1);
 			}
 			case "id" -> {
-				Tree GF1 = GF();
-				return new Tree(new NonTerminal("FB"), GF1);
+				Tree<Integer> GF1 = GF();
+				Integer value1 = GF1.val();
+				// TODO Count value of this node
+				return new Tree<Integer>(new NonTerminal("FB"), GF1);
 			}
 			case "/" -> {
-				Tree AF1 = AF();
-				return new Tree(new NonTerminal("FB"), AF1);
+				Tree<Integer> AF1 = AF();
+				Integer value1 = AF1.val();
+				// TODO Count value of this node
+				return new Tree<Integer>(new NonTerminal("FB"), AF1);
 			}
 			case "DEFN" -> {
-				Tree DEFN1 = DEFN();
-				return new Tree(new NonTerminal("FB"), DEFN1);
+				Tree<Integer> DEFN1 = DEFN();
+				Integer value1 = DEFN1.val();
+				// TODO Count value of this node
+				return new Tree<Integer>(new NonTerminal("FB"), DEFN1);
 			}
 			case "-" -> {
-				Tree AF1 = AF();
-				return new Tree(new NonTerminal("FB"), AF1);
+				Tree<Integer> AF1 = AF();
+				Integer value1 = AF1.val();
+				// TODO Count value of this node
+				return new Tree<Integer>(new NonTerminal("FB"), AF1);
 			}
 			case "NS" -> {
-				Tree NS1 = NS();
-				return new Tree(new NonTerminal("FB"), NS1);
+				Tree<Integer> NS1 = NS();
+				Integer value1 = NS1.val();
+				// TODO Count value of this node
+				return new Tree<Integer>(new NonTerminal("FB"), NS1);
 			}
 			default -> throw new IllegalStateException("Unexpected value: " + lex.curToken());
 		}
 
 	}
 
-	private Tree GF() throws ParseException {
+	private Tree<Integer> GF(Integer... values) throws ParseException {
 		switch (lex.curToken().name()) {
 			case "id" -> {
 				assert lex.curToken().name().equals("id");
-				Tree token1 = new Tree(lex.curToken());
+				Tree<Integer> token1 = new Tree(lex.curToken());
+				Integer value1 = token1.val();
 				lex.nextToken();
-				Tree FORMM2 = FORMM();
-				return new Tree(new NonTerminal("GF"), token1, FORMM2);
+				Tree<Integer> FORMM2 = FORMM(value1);
+				Integer value2 = FORMM2.val();
+				// TODO Count value of this node
+				return new Tree<Integer>(new NonTerminal("GF"), token1, FORMM2);
 			}
 			default -> throw new IllegalStateException("Unexpected value: " + lex.curToken());
 		}

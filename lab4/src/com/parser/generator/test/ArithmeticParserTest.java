@@ -13,7 +13,9 @@ public class ArithmeticParserTest {
                 {
                         "1+",
                         "1+2",
-                        "(1 + 2) * 3"
+                        "(1 + 2) * 3",
+                        "(1 + 2) * fib(3) * 2",
+                        "fib((1 + 2) * fib(3) * 2)"
                 };
         for (int i = 0; i < tests.length; i++) {
             try {
@@ -36,6 +38,7 @@ public class ArithmeticParserTest {
         try {
             Tree t = p.parse(new ByteArrayInputStream(StandardCharsets.UTF_8.encode(test).
                     array()));
+            System.out.println(t.val);
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
                 writer.write("digraph ParserResult {\n");
                 t.writeUsing(writer);

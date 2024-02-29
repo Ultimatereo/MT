@@ -157,7 +157,7 @@ public class LL1ParserGenerator implements ParserGenerator {
     }
 
     private void generateFunction(StringBuilder code, NonTerminal nt, Map<Token, Rule> tokenRuleMap) {
-        code.append("\tprivate Tree<").append(typeRes).append("> ").append(nt.name()).append("() throws ParseException {\n");
+        code.append("\tprivate Tree<").append(typeRes).append("> ").append(nt.name()).append("(").append(typeRes).append("... values) throws ParseException {\n");
         code.append("\t\tswitch (lex.curToken().name()) {\n");
         for (Token token: tokenRuleMap.keySet()) {
             code.append("\t\t\tcase \"").append(token.name()).append("\" -> {\n");
@@ -171,9 +171,11 @@ public class LL1ParserGenerator implements ParserGenerator {
 
     private void generateRule(StringBuilder code, Rule rule) {
         if (rule.rightPart().getFirst().equals(epsilon)) {
-            String rc = "return new Tree<" +  typeRes + ">(new NonTerminal(\""+ rule.leftPart().name() +"\"));\n";
+            String rc = "Tree<" + typeRes + "> t = new Tree<" +  typeRes + ">(new NonTerminal(\""+ rule.leftPart().name() +"\"));\n";
+            String rc1 = "return t;\n";
             code.append("\t\t\t\t").append("// TODO Count value of this node\n");
             code.append("\t\t\t\t").append(rc);
+            code.append("\t\t\t\t").append(rc1);
             return;
         }
         List<String> commands = new ArrayList<>();
@@ -184,7 +186,7 @@ public class LL1ParserGenerator implements ParserGenerator {
             if (element instanceof NonTerminal) {
                 String var = element.name() + counter;
                 nodes.add(var);
-                String command = "Tree<" + typeRes + "> " + var + " = " + element.name() + "();\n";
+                String command = "Tree<" + typeRes + "> " + var + " = " + element.name() + "(" + getListVar(counter) + ");\n";
                 String commandVal = typeRes + " value" + counter + " = " + var + ".val();\n";
                 commands.add(command);
                 commands.add(commandVal);
@@ -203,11 +205,24 @@ public class LL1ParserGenerator implements ParserGenerator {
             }
         }
         commands.add("// TODO Count value of this node\n");
-        String rc = "return new Tree<" + typeRes + ">(new NonTerminal(\""+ rule.leftPart().name() +"\")"+ getNodes(nodes)  + ");\n";
+        String rc = "Tree<" + typeRes + "> t = new Tree<" + typeRes + ">(new NonTerminal(\""+ rule.leftPart().name() +"\")"+ getNodes(nodes)  + ");\n";
+        String rc1 = "return t;\n";
         commands.add(rc);
+        commands.add(rc1);
         for (String c : commands) {
             code.append("\t\t\t\t").append(c);
         }
+    }
+
+    private String getListVar(int counter) {
+        StringBuilder sb = new StringBuilder();
+        if (counter > 1) {
+            sb.append("value1");
+        }
+        for (int i = 2; i < counter; i++) {
+            sb.append(", value").append(i);
+        }
+        return sb.toString();
     }
 
     private String getNodes(List<String> nodes) {

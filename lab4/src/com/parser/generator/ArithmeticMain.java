@@ -1,6 +1,7 @@
 package com.parser.generator;
 
 import com.parser.generator.lexic.factory.TokenRegexFactory;
+import com.parser.generator.lexic.token.KeyWord;
 import com.parser.generator.lexic.token.SimpleToken;
 import com.parser.generator.lexic.token.Symbol;
 import com.parser.generator.lexic.token.Token;
@@ -25,7 +26,8 @@ public class ArithmeticMain {
             "*", new Symbol("*"),
             "(", new Symbol("("),
             ")", new Symbol(")"),
-            "n", new Token("n")
+            "n", new Token("n"),
+            "fib", new KeyWord("fib")
     );
     private final static List<Rule> rules = List.of(
             new Rule(nts.get("E"), nts.get("T"), nts.get("E'")),
@@ -35,7 +37,8 @@ public class ArithmeticMain {
             new Rule(nts.get("T'"), ts.get("*"), nts.get("F"), nts.get("T'")),
             new Rule(nts.get("T'"), LL1ParserGenerator.epsilon),
             new Rule(nts.get("F"), ts.get("n")),
-            new Rule(nts.get("F"), ts.get("("), nts.get("E") , ts.get(")"))
+            new Rule(nts.get("F"), ts.get("("), nts.get("E") , ts.get(")")),
+            new Rule(nts.get("F"), ts.get("fib"), ts.get("("), nts.get("E") , ts.get(")"))
     );
 
     private final static List<Rule> notLL1Rules = List.of(
@@ -50,7 +53,8 @@ public class ArithmeticMain {
             (SimpleToken) ts.get("+"),
             (SimpleToken) ts.get("*"),
             (SimpleToken) ts.get("("),
-            (SimpleToken) ts.get(")")
+            (SimpleToken) ts.get(")"),
+            (SimpleToken) ts.get("fib")
     );
     private final static List<TokenRegexFactory> factoryTokens = List.of(
             new TokenRegexFactory("n", "\\d+")
