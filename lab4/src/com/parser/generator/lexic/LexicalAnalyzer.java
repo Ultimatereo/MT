@@ -3,6 +3,7 @@ package com.parser.generator.lexic;
 import com.parser.generator.lexic.factory.TokenRegexFactory;
 import com.parser.generator.lexic.parse.TokenParseTree;
 import com.parser.generator.lexic.parse.TrieNode;
+import com.parser.generator.lexic.token.SimpleToken;
 import com.parser.generator.lexic.token.Symbol;
 import com.parser.generator.lexic.token.Token;
 
@@ -14,7 +15,7 @@ import java.util.List;
 import java.util.Set;
 
 public class LexicalAnalyzer {
-    private final static Token end = new Token("END", "");
+    private final static Token end = new Token("$", "");
     private final InputStream is;
     private final List<TokenRegexFactory> tokenRegexFactories;
     private final TrieNode root;
@@ -23,7 +24,7 @@ public class LexicalAnalyzer {
     private int curPos;
     private Token curToken;
 
-    public LexicalAnalyzer(InputStream is, List<TokenRegexFactory> tokenRegexFactories, List<Token> tokens) throws ParseException {
+    public LexicalAnalyzer(InputStream is, List<TokenRegexFactory> tokenRegexFactories, List<SimpleToken> tokens) throws ParseException {
         this.is = is;
         this.tokenRegexFactories = tokenRegexFactories;
         this.root = new TokenParseTree(tokens).root();
@@ -32,7 +33,7 @@ public class LexicalAnalyzer {
         nextChar();
     }
 
-    private Set<Character> createStartsOfSymbols(List<Token> tokens) {
+    private Set<Character> createStartsOfSymbols(List<SimpleToken> tokens) {
         Set<Character> set = new HashSet<>();
         for (Token token : tokens) {
             if (token instanceof Symbol) {
@@ -67,13 +68,13 @@ public class LexicalAnalyzer {
     }
 
     private void parse() throws ParseException {
-        if (curChar == 0) {
+        if (curChar == 0 || curChar == -1) {
             curToken = end;
             return;
         }
         StringBuilder sb = new StringBuilder();
         if (!tryAddSymbolOrKeyWord(sb, root)) {
-            while (curChar != 0 && !isBlank(curChar) && !isStartOfSymbol(curChar)) {
+            while (curChar != 0 && curChar != -1 && !isBlank(curChar) && !isStartOfSymbol(curChar)) {
                 sb.append((char) curChar);
                 nextChar();
             }
@@ -101,7 +102,7 @@ public class LexicalAnalyzer {
             char c = (char) curChar;
             if (curNode.isEnd()) {
                 curToken = curNode.token();
-                return curToken instanceof Symbol || curChar == 0 || isBlank(curChar) || isStartOfSymbol(curChar);
+                return curToken instanceof Symbol || curChar == -1 || curChar == 0 || isBlank(curChar) || isStartOfSymbol(curChar);
             }
             if (curNode.children().containsKey(c)) {
                 curNode = curNode.children().get(c);

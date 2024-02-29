@@ -1,10 +1,22 @@
-package com.parser.generator;
-
-import java.util.List;
+package com.parser.generator.rule;
 
 import java.util.List;
 
 public class Rule {
+    @Override
+    public String toString() {
+        String rightPartString = getRightPartString();
+        return leftPart.name() + " -> " + rightPartString;
+    }
+
+    private String getRightPartString() {
+        StringBuilder sb = new StringBuilder();
+        for (Element element: rightPart) {
+            sb.append(element.name()).append(" ");
+        }
+        return sb.toString();
+    }
+
     private final NonTerminal leftPart;
     private final List<Element> rightPart;
 

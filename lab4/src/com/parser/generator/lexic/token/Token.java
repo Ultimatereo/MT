@@ -1,8 +1,16 @@
 package com.parser.generator.lexic.token;
 
-import com.parser.generator.Element;
+import com.parser.generator.rule.Element;
 
 public class Token implements Element {
+    @Override
+    public String toString() {
+        return "Token{" +
+                "name='" + name + '\'' +
+                ", value='" + value + '\'' +
+                '}';
+    }
+
     private final String name;
     private String value;
 

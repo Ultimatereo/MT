@@ -8,9 +8,16 @@ public class TokenRegexFactory {
     private final String name;
     private final Pattern pattern;
 
+    public String regex() {
+        return regex;
+    }
+
+    private final String regex;
+
     public TokenRegexFactory(String name, String regex) {
         this.name = name;
         this.pattern = Pattern.compile(regex);
+        this.regex = regex;
     }
 
     public String name() {

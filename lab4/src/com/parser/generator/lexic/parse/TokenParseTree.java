@@ -1,6 +1,7 @@
 package com.parser.generator.lexic.parse;
 
 import com.parser.generator.lexic.token.KeyWord;
+import com.parser.generator.lexic.token.SimpleToken;
 import com.parser.generator.lexic.token.Symbol;
 import com.parser.generator.lexic.token.Token;
 
@@ -11,14 +12,14 @@ import java.util.List;
 public class TokenParseTree {
     private final TrieNode root = new TrieNode();
 
-    public TokenParseTree(List<Token> tokens) {
-        for (Token token : tokens) {
+    public TokenParseTree(List<SimpleToken> tokens) {
+        for (SimpleToken token : tokens) {
             insert(token);
         }
     }
 
     public static void main(String[] args) {
-        ArrayList<Token> keyWordArrayList = new ArrayList<>();
+        ArrayList<SimpleToken> keyWordArrayList = new ArrayList<>();
         keyWordArrayList.add(new KeyWord("private"));
         keyWordArrayList.add(new KeyWord("protected"));
         keyWordArrayList.add(new KeyWord("public"));
