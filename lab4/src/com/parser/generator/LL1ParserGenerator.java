@@ -21,6 +21,7 @@ public class LL1ParserGenerator implements ParserGenerator {
             import com.parser.generator.lexic.LexicalAnalyzer;
             import com.parser.generator.lexic.factory.TokenRegexFactory;
             import com.parser.generator.lexic.token.SimpleToken;
+            import com.parser.generator.lexic.token.Token;
             import com.parser.generator.lexic.token.Symbol;
             import com.parser.generator.lexic.token.Token;
             import com.parser.generator.rule.NonTerminal;
