@@ -1,6 +1,6 @@
-package lexic.factory;
+package com.parser.generator.lexic.factory;
 
-import lexic.token.Token;
+import com.parser.generator.lexic.token.Token;
 
 import java.util.regex.Pattern;
 

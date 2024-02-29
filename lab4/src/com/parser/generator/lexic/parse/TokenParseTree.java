@@ -1,8 +1,8 @@
-package lexic.parse;
+package com.parser.generator.lexic.parse;
 
-import lexic.token.KeyWord;
-import lexic.token.Symbol;
-import lexic.token.Token;
+import com.parser.generator.lexic.token.KeyWord;
+import com.parser.generator.lexic.token.Symbol;
+import com.parser.generator.lexic.token.Token;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +22,7 @@ public class TokenParseTree {
         keyWordArrayList.add(new KeyWord("private"));
         keyWordArrayList.add(new KeyWord("protected"));
         keyWordArrayList.add(new KeyWord("public"));
-        keyWordArrayList.add(new Symbol("COMMA", ","));
+        keyWordArrayList.add(new Symbol(","));
         TokenParseTree tpt = new TokenParseTree(keyWordArrayList);
         System.out.println("End");
     }

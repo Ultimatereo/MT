@@ -1,8 +1,14 @@
-package lexic.token;
+package com.parser.generator.lexic.token;
 
-public class Token {
+import com.parser.generator.Element;
+
+public class Token implements Element {
     private final String name;
-    private final String value;
+    private String value;
+
+    public Token(String name) {
+        this.name = name;
+    }
 
     public Token(String name, String value) {
         this.name = name;

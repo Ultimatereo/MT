@@ -1,6 +1,6 @@
-package lexic.parse;
+package com.parser.generator.lexic.parse;
 
-import lexic.token.Token;
+import com.parser.generator.lexic.token.Token;
 
 import java.util.HashMap;
 import java.util.Map;

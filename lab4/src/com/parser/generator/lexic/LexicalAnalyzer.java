@@ -1,10 +1,10 @@
-package lexic;
+package com.parser.generator.lexic;
 
-import lexic.factory.TokenRegexFactory;
-import lexic.parse.TokenParseTree;
-import lexic.parse.TrieNode;
-import lexic.token.Symbol;
-import lexic.token.Token;
+import com.parser.generator.lexic.factory.TokenRegexFactory;
+import com.parser.generator.lexic.parse.TokenParseTree;
+import com.parser.generator.lexic.parse.TrieNode;
+import com.parser.generator.lexic.token.Symbol;
+import com.parser.generator.lexic.token.Token;
 
 import java.io.IOException;
 import java.io.InputStream;
