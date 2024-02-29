@@ -20,10 +20,7 @@ public class LL1ParserGenerator implements ParserGenerator {
                         
             import com.parser.generator.lexic.LexicalAnalyzer;
             import com.parser.generator.lexic.factory.TokenRegexFactory;
-            import com.parser.generator.lexic.token.SimpleToken;
-            import com.parser.generator.lexic.token.Token;
-            import com.parser.generator.lexic.token.Symbol;
-            import com.parser.generator.lexic.token.Token;
+            import com.parser.generator.lexic.token.*;
             import com.parser.generator.rule.NonTerminal;
             import com.parser.generator.utils.Tree;
                         
@@ -37,6 +34,7 @@ public class LL1ParserGenerator implements ParserGenerator {
     private final List<Rule> rules;
     private final List<SimpleToken> simpleTokens;
     private final List<TokenRegexFactory> factoryTokens;
+    private final String typeRes;
 
     public Map<NonTerminal, Set<Token>> first() {
         return first;
@@ -53,10 +51,11 @@ public class LL1ParserGenerator implements ParserGenerator {
         return ntRules;
     }
 
-    public LL1ParserGenerator(List<Rule> rules, List<SimpleToken> simpleTokens, List<TokenRegexFactory> factoryTokens) {
+    public LL1ParserGenerator(List<Rule> rules, List<SimpleToken> simpleTokens, List<TokenRegexFactory> factoryTokens, String typeRes) {
         this.rules = rules;
         this.simpleTokens = simpleTokens;
         this.factoryTokens = factoryTokens;
+        this.typeRes = typeRes;
         createFirst();
         createFollow();
         createNTRules();
@@ -158,7 +157,7 @@ public class LL1ParserGenerator implements ParserGenerator {
     }
 
     private void generateFunction(StringBuilder code, NonTerminal nt, Map<Token, Rule> tokenRuleMap) {
-        code.append("\tprivate Tree ").append(nt.name()).append("() throws ParseException {\n");
+        code.append("\tprivate Tree<").append(typeRes).append("> ").append(nt.name()).append("() throws ParseException {\n");
         code.append("\t\tswitch (lex.curToken().name()) {\n");
         for (Token token: tokenRuleMap.keySet()) {
             code.append("\t\t\tcase \"").append(token.name()).append("\" -> {\n");
@@ -172,7 +171,8 @@ public class LL1ParserGenerator implements ParserGenerator {
 
     private void generateRule(StringBuilder code, Rule rule) {
         if (rule.rightPart().getFirst().equals(epsilon)) {
-            String rc = "return new Tree(new NonTerminal(\""+ rule.leftPart().name() +"\"));\n";
+            String rc = "return new Tree<" +  typeRes + ">(new NonTerminal(\""+ rule.leftPart().name() +"\"));\n";
+            code.append("\t\t\t\t").append("// TODO Count value of this node\n");
             code.append("\t\t\t\t").append(rc);
             return;
         }
@@ -184,21 +184,26 @@ public class LL1ParserGenerator implements ParserGenerator {
             if (element instanceof NonTerminal) {
                 String var = element.name() + counter;
                 nodes.add(var);
-                String command = "Tree " + var + " = " + element.name() + "();\n";
+                String command = "Tree<" + typeRes + "> " + var + " = " + element.name() + "();\n";
+                String commandVal = typeRes + " value" + counter + " = " + var + ".val();\n";
                 commands.add(command);
+                commands.add(commandVal);
             } else {
                 Token token = (Token) element;
                 String var = "token" + counter;
                 nodes.add(var);
                 String c1 = "assert lex.curToken().name().equals(\"" + element.name() + "\");\n";
-                String c2 = "Tree " + var + " = " + "new Tree(lex.curToken());\n";
+                String c2 = "Tree<" + typeRes + "> " + var + " = " + "new Tree(lex.curToken());\n";
+                String commandVal = typeRes + " value" + counter + " = " + var + ".val();\n";
                 String c3 = "lex.nextToken();\n";
                 commands.add(c1);
                 commands.add(c2);
+                commands.add(commandVal);
                 commands.add(c3);
             }
         }
-        String rc = "return new Tree(new NonTerminal(\""+ rule.leftPart().name() +"\")"+ getNodes(nodes)  + ");\n";
+        commands.add("// TODO Count value of this node\n");
+        String rc = "return new Tree<" + typeRes + ">(new NonTerminal(\""+ rule.leftPart().name() +"\")"+ getNodes(nodes)  + ");\n";
         commands.add(rc);
         for (String c : commands) {
             code.append("\t\t\t\t").append(c);
@@ -214,7 +219,7 @@ public class LL1ParserGenerator implements ParserGenerator {
     }
 
     private void generateParseFunction(StringBuilder code) {
-        code.append("\tpublic Tree parse(InputStream is) throws ParseException {\n");
+        code.append("\tpublic Tree<").append(typeRes).append("> parse(InputStream is) throws ParseException {\n");
         code.append("\t\tlex = new LexicalAnalyzer(is, factoryTokens, simpleTokens);\n");
         code.append("\t\tlex.nextToken();\n");
         code.append("\t\treturn ").append(rules.get(0).leftPart().name()).append("();\n");
@@ -235,8 +240,8 @@ public class LL1ParserGenerator implements ParserGenerator {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < regex.length(); i++) {
             char c = regex.charAt(i);
-            if (c == '\\') {
-                sb.append("\\\\");
+            if (c == '\\' || c == '"') {
+                sb.append("\\").append(c);
             } else {
                 sb.append(c);
             }

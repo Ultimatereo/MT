@@ -8,8 +8,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class Tree {
+public class Tree<T> {
     static int counter = 0;
+    T val;
     final Element node;
     final int id;
     List<Tree> children;
@@ -47,5 +48,9 @@ public class Tree {
 
     private void writeNode(String v_name, Element label, BufferedWriter writer) throws IOException {
         writer.write(v_name + " [label=\"" + label.name() + "\"]\n");
+    }
+
+    public T val() {
+        return val;
     }
 }

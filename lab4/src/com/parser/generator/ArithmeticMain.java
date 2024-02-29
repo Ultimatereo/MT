@@ -59,7 +59,7 @@ public class ArithmeticMain {
 
     public static void main(String[] args) {
         LL1ParserGenerator arithmeticGenerator = new LL1ParserGenerator(
-                rules, simpleTokens, factoryTokens
+                rules, simpleTokens, factoryTokens, "Integer"
         );
 
         System.out.println("FIRST");
@@ -71,7 +71,7 @@ public class ArithmeticMain {
         Map<NonTerminal, Map<Token, Rule>> ntRules = arithmeticGenerator.ntRules();
         printNTRules(ntRules);
         try {
-            LL1ParserGenerator wrongArithmeticGenerator = new LL1ParserGenerator(notLL1Rules, simpleTokens, factoryTokens);
+            LL1ParserGenerator wrongArithmeticGenerator = new LL1ParserGenerator(notLL1Rules, simpleTokens, factoryTokens, "Integer");
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
         }

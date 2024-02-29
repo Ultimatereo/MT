@@ -4,7 +4,7 @@ import com.parser.generator.lexic.token.Token;
 
 import java.util.regex.Pattern;
 
-public class TokenRegexFactory {
+public class TokenRegexFactory extends Token {
     private final String name;
     private final Pattern pattern;
 
@@ -15,6 +15,7 @@ public class TokenRegexFactory {
     private final String regex;
 
     public TokenRegexFactory(String name, String regex) {
+        super(name);
         this.name = name;
         this.pattern = Pattern.compile(regex);
         this.regex = regex;

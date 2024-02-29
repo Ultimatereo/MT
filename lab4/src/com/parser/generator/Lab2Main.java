@@ -54,7 +54,7 @@ public class Lab2Main {
 
     public static void main(String[] args) {
         LL1ParserGenerator kotlinGenerator = new LL1ParserGenerator(
-                rules, simpleTokens, factoryTokens
+                rules, simpleTokens, factoryTokens, "Integer"
         );
 
         System.out.println("FIRST");
