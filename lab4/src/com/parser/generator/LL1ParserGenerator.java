@@ -191,7 +191,7 @@ public class LL1ParserGenerator implements ParserGenerator {
 
     private void generateRule(StringBuilder code, Rule rule) {
         if (rule.rightPart().getFirst().equals(epsilon)) {
-            String rc = "Tree<" + typeRes + "> t = new Tree<" + typeRes + ">(new NonTerminal(\"" + rule.leftPart().name() + "\"));\n";
+            String rc = "Tree<" + typeRes + "> t = new Tree<>(new NonTerminal(\"" + rule.leftPart().name() + "\"));\n";
             String rc1 = "return t;\n";
 //            code.append("\t\t\t\t").append("// TODO Count value of this node\n");
             code.append("\t\t\t\t").append(rc);
@@ -216,7 +216,7 @@ public class LL1ParserGenerator implements ParserGenerator {
                 String var = "token" + counter;
                 nodes.add(var);
                 String c1 = "assert lex.curToken().name().equals(\"" + element.name() + "\");\n";
-                String c2 = "Tree<" + typeRes + "> " + var + " = " + "new Tree(lex.curToken());\n";
+                String c2 = "Tree<" + typeRes + "> " + var + " = " + "new Tree<>(lex.curToken());\n";
 //                String commandVal = typeRes + " value" + counter + " = " + var + ".val();\n";
                 String c3 = "lex.nextToken();\n";
                 commands.add(c1);
@@ -226,7 +226,7 @@ public class LL1ParserGenerator implements ParserGenerator {
             }
         }
 //        commands.add("// TODO Count value of this node\n");
-        String rc = "Tree<" + typeRes + "> t = new Tree<" + typeRes + ">(new NonTerminal(\"" + rule.leftPart().name() + "\")" + getNodes(nodes) + ");\n";
+        String rc = "Tree<" + typeRes + "> t = new Tree<>(new NonTerminal(\"" + rule.leftPart().name() + "\")" + getNodes(nodes) + ");\n";
         String rc1 = "return t;\n";
         commands.add(rc);
         commands.add(rc1);
