@@ -155,8 +155,13 @@ public class LL1ParserGenerator implements ParserGenerator {
         generateFactoryTokens(code);
         code.append("\tLexicalAnalyzer lex;\n\n");
         generateParseFunction(code);
-        for (NonTerminal nt : ntTokenRules.keySet()) {
-            generateFunction(code, nt);
+        Set<NonTerminal> ntWasBefore = new HashSet<>();
+        for (Rule rule : rules) {
+            NonTerminal nt = rule.leftPart();
+            if (!ntWasBefore.contains(nt)) {
+                ntWasBefore.add(nt);
+                generateFunction(code, nt);
+            }
         }
         code.append("}\n");
     }
