@@ -10,7 +10,7 @@ import java.util.List;
 
 public class Tree<T> {
     static int counter = 0;
-    final Element node;
+    public final Element node;
     final int id;
 
     public T value;

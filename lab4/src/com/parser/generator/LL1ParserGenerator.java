@@ -39,6 +39,12 @@ public class LL1ParserGenerator implements ParserGenerator {
     private final Map<NonTerminal, Set<Token>> follow = new HashMap<>();
     private final Map<NonTerminal, Map<Token, Rule>> ntTokenRules = new HashMap<>();
     private final Map<NonTerminal, Map<Rule, List<Token>>> ntRuleTokens = new HashMap<>();
+    private boolean withSemantics = false;
+
+    public void turnOnSemantics() {
+        withSemantics = true;
+    }
+
     public LL1ParserGenerator(List<Rule> rules, List<SimpleToken> simpleTokens, List<TokenRegexFactory> factoryTokens, String typeRes) {
         this.rules = rules;
         this.simpleTokens = simpleTokens;
@@ -154,6 +160,7 @@ public class LL1ParserGenerator implements ParserGenerator {
         generateSimpleTokens(code);
         generateFactoryTokens(code);
         code.append("\tLexicalAnalyzer lex;\n\n");
+        generateCombineFunction(code, typeRes);
         generateParseFunction(code);
         Set<NonTerminal> ntWasBefore = new HashSet<>();
         for (Rule rule : rules) {
@@ -164,6 +171,19 @@ public class LL1ParserGenerator implements ParserGenerator {
             }
         }
         code.append("}\n");
+    }
+
+    private void generateCombineFunction(StringBuilder code, String typeRes) {
+        code.append("\tpublic static ").append(typeRes).append("[] combineArrays(").
+                append(typeRes).append("[] array1, ").append(typeRes).append("[] array2) {\n");
+        code.append("\t\t").append(typeRes).append("[] combinedArray = new ").append(typeRes)
+                .append("[array1.length + array2.length];\n");
+        code.append("""
+                \t\tSystem.arraycopy(array1, 0, combinedArray, 0, array1.length);
+                \t\tSystem.arraycopy(array2, 0, combinedArray, array1.length, array2.length);
+                \t\treturn combinedArray;
+                \t}
+                """);
     }
 
     private void generateFunction(StringBuilder code, NonTerminal nt) {
@@ -193,8 +213,10 @@ public class LL1ParserGenerator implements ParserGenerator {
         if (rule.rightPart().getFirst().equals(epsilon)) {
             String rc = "Tree<" + typeRes + "> t = new Tree<>(new NonTerminal(\"" + rule.leftPart().name() + "\"));\n";
             String rc1 = "return t;\n";
-//            code.append("\t\t\t\t").append("// TODO Count value of this node\n");
             code.append("\t\t\t\t").append(rc);
+            if (withSemantics) {
+                code.append("\t\t\t\t").append(rule.semantics());
+            }
             code.append("\t\t\t\t").append(rc1);
             return;
         }
@@ -206,29 +228,36 @@ public class LL1ParserGenerator implements ParserGenerator {
             if (element instanceof NonTerminal) {
                 String var = element.name() + counter;
                 nodes.add(var);
-                String command = "Tree<" + typeRes + "> " + var + " = " + element.name() + "();\n";
-//                String command = "Tree<" + typeRes + "> " + var + " = " + element.name() + "(" + getListVar(counter) + ");\n";
-//                String commandVal = typeRes + " value" + counter + " = " + var + ".val();\n";
-                commands.add(command);
-//                commands.add(commandVal);
+                if (withSemantics) {
+                    String command = "Tree<" + typeRes + "> " + var + " = " + element.name() + "(" + getListVar(counter) + ");\n";
+                    String commandVal = typeRes + " value" + counter + " = " + var + ".value;\n";
+                    commands.add(command);
+                    commands.add(commandVal);
+                } else {
+                    String command = "Tree<" + typeRes + "> " + var + " = " + element.name() + "();\n";
+                    commands.add(command);
+                }
             } else {
                 Token token = (Token) element;
                 String var = "token" + counter;
                 nodes.add(var);
                 String c1 = "assert lex.curToken().name().equals(\"" + element.name() + "\");\n";
                 String c2 = "Tree<" + typeRes + "> " + var + " = " + "new Tree<>(lex.curToken());\n";
-//                String commandVal = typeRes + " value" + counter + " = " + var + ".val();\n";
                 String c3 = "lex.nextToken();\n";
                 commands.add(c1);
                 commands.add(c2);
-//                commands.add(commandVal);
+                if (withSemantics) {
+                    commands.add(typeRes + " value" + counter + " = " + var + ".value;\n");
+                }
                 commands.add(c3);
             }
         }
-//        commands.add("// TODO Count value of this node\n");
         String rc = "Tree<" + typeRes + "> t = new Tree<>(new NonTerminal(\"" + rule.leftPart().name() + "\")" + getNodes(nodes) + ");\n";
         String rc1 = "return t;\n";
         commands.add(rc);
+        if (withSemantics) {
+            commands.add(rule.semantics());
+        }
         commands.add(rc1);
         for (String c : commands) {
             code.append("\t\t\t\t").append(c);
@@ -237,12 +266,14 @@ public class LL1ParserGenerator implements ParserGenerator {
 
     private String getListVar(int counter) {
         StringBuilder sb = new StringBuilder();
+        sb.append("combineArrays(values, new Integer[]{");
         if (counter > 1) {
             sb.append("value1");
         }
         for (int i = 2; i < counter; i++) {
             sb.append(", value").append(i);
         }
+        sb.append("})");
         return sb.toString();
     }
 

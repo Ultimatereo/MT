@@ -39,14 +39,14 @@ public class ArithmeticParserTest {
         try {
             Tree t = p.parse(new ByteArrayInputStream(StandardCharsets.UTF_8.encode(test).
                     array()));
-//            System.out.println(t.val);
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
                 writer.write("digraph ParserResult {\n");
                 t.writeUsing(writer);
                 writer.write("}");
             }
-            System.out.println("\"" + test + "\"" + " is parsed successfully.\n");
-        } catch (ParseException e) {
+            System.out.println("\"" + test + "\"" + " is parsed successfully.");
+            System.out.println("Answer to that is: " + t.value + "\n");
+        } catch (ParseException | IllegalStateException e) {
             System.out.println("Error happened during parsing expression: \"" + test + "\"");
             System.out.println(e.getMessage() + "\n");
         }

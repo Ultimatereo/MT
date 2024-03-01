@@ -6,13 +6,29 @@ public class Rule {
     private final NonTerminal leftPart;
     private final List<Element> rightPart;
 
-    public Rule(NonTerminal leftPart, List<Element> rightPart) {
+    private final String semantics;
+
+    public Rule(String semantics, NonTerminal leftPart, List<Element> rightPart) {
         this.leftPart = leftPart;
         this.rightPart = rightPart;
+        this.semantics = semantics;
     }
+    public Rule(String semantics, NonTerminal leftPart, Element... rightPart) {
+        this.leftPart = leftPart;
+        this.semantics = semantics;
+        this.rightPart = List.of(rightPart);
+    }
+
     public Rule(NonTerminal leftPart, Element... rightPart) {
         this.leftPart = leftPart;
+        this.semantics = null;
         this.rightPart = List.of(rightPart);
+    }
+
+    public Rule(NonTerminal leftPart, List<Element> rightPart) {
+        this.leftPart = leftPart;
+        this.semantics = null;
+        this.rightPart = rightPart;
     }
 
     @Override
@@ -35,6 +51,10 @@ public class Rule {
 
     public List<Element> rightPart() {
         return rightPart;
+    }
+
+    public String semantics() {
+        return semantics;
     }
 }
 
