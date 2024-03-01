@@ -10,9 +10,9 @@ import java.util.List;
 
 public class Tree<T> {
     static int counter = 0;
-    public T val;
     final Element node;
     final int id;
+    public T value;
     List<Tree<T>> children;
 
     @SafeVarargs
@@ -49,9 +49,5 @@ public class Tree<T> {
 
     private void writeNode(String v_name, Element label, BufferedWriter writer) throws IOException {
         writer.write(v_name + " [label=\"" + label.name() + "\"]\n");
-    }
-
-    public T val() {
-        return val;
     }
 }

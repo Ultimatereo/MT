@@ -3,6 +3,7 @@ package com.parser.generator.test;
 import com.parser.generator.output.ArithmeticParser;
 import com.parser.generator.utils.DotToPngConverter;
 import com.parser.generator.utils.Tree;
+
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
@@ -28,9 +29,9 @@ public class ArithmeticParserTest {
 
     private static void testParse(String test, int i) throws IOException {
         ArithmeticParser p = new ArithmeticParser();
-        File dotFile = new File("graph" + i + ".dot");
+        File dotFile = new File("graphA" + i + ".dot");
         parseAnsSaveIfComplete(p, test, dotFile);
-        File pngFile = new File("graph" + i + ".png");
+        File pngFile = new File("graphA" + i + ".png");
         DotToPngConverter.convertDotToPng(dotFile.getPath(), pngFile.getPath());
     }
 
@@ -38,7 +39,7 @@ public class ArithmeticParserTest {
         try {
             Tree t = p.parse(new ByteArrayInputStream(StandardCharsets.UTF_8.encode(test).
                     array()));
-            System.out.println(t.val);
+//            System.out.println(t.val);
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
                 writer.write("digraph ParserResult {\n");
                 t.writeUsing(writer);

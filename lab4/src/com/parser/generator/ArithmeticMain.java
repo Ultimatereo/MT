@@ -37,8 +37,8 @@ public class ArithmeticMain {
             new Rule(nts.get("T'"), ts.get("*"), nts.get("F"), nts.get("T'")),
             new Rule(nts.get("T'"), LL1ParserGenerator.epsilon),
             new Rule(nts.get("F"), ts.get("n")),
-            new Rule(nts.get("F"), ts.get("("), nts.get("E") , ts.get(")")),
-            new Rule(nts.get("F"), ts.get("fib"), ts.get("("), nts.get("E") , ts.get(")"))
+            new Rule(nts.get("F"), ts.get("("), nts.get("E"), ts.get(")")),
+            new Rule(nts.get("F"), ts.get("fib"), ts.get("("), nts.get("E"), ts.get(")"))
     );
 
     private final static List<Rule> notLL1Rules = List.of(

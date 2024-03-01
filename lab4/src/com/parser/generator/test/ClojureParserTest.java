@@ -3,6 +3,7 @@ package com.parser.generator.test;
 import com.parser.generator.output.ClojureParser;
 import com.parser.generator.utils.DotToPngConverter;
 import com.parser.generator.utils.Tree;
+
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
@@ -29,9 +30,9 @@ public class ClojureParserTest {
 
     private static void testParse(String test, int i) throws IOException {
         ClojureParser p = new ClojureParser();
-        File dotFile = new File("graph" + i + ".dot");
+        File dotFile = new File("graphC" + i + ".dot");
         parseAnsSaveIfComplete(p, test, dotFile);
-        File pngFile = new File("graph" + i + ".png");
+        File pngFile = new File("graphC" + i + ".png");
         DotToPngConverter.convertDotToPng(dotFile.getPath(), pngFile.getPath());
     }
 

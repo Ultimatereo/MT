@@ -3,6 +3,7 @@ package com.parser.generator.test;
 import com.parser.generator.output.KotlinFunParser;
 import com.parser.generator.utils.DotToPngConverter;
 import com.parser.generator.utils.Tree;
+
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
@@ -27,9 +28,9 @@ public class KotlinFunParserTest {
 
     private static void testParse(String test, int i) throws IOException {
         KotlinFunParser p = new KotlinFunParser();
-        File dotFile = new File("graph" + i + ".dot");
+        File dotFile = new File("graphK" + i + ".dot");
         parseAnsSaveIfComplete(p, test, dotFile);
-        File pngFile = new File("graph" + i + ".png");
+        File pngFile = new File("graphK" + i + ".png");
         DotToPngConverter.convertDotToPng(dotFile.getPath(), pngFile.getPath());
     }
 

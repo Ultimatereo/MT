@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.util.*;
 
 public class LL1ParserGenerator implements ParserGenerator {
+    public static final Token epsilon = new Token("ε", "");
     private final static String dirPath = "D:\\KT\\MT\\lab4\\src\\com\\parser\\generator\\output\\";
     private static final String imports = """
             package com.parser.generator.output;
@@ -27,14 +28,32 @@ public class LL1ParserGenerator implements ParserGenerator {
             import java.io.InputStream;
             import java.text.ParseException;
             import java.util.List;
-            
+                        
             """;
-    public static final Token epsilon = new Token("ε", "");
     private static final Token end = new Token("$", "");
     private final List<Rule> rules;
     private final List<SimpleToken> simpleTokens;
     private final List<TokenRegexFactory> factoryTokens;
     private final String typeRes;
+    private final Map<NonTerminal, Set<Token>> first = new HashMap<>();
+    private final Map<NonTerminal, Set<Token>> follow = new HashMap<>();
+    private final Map<NonTerminal, Map<Token, Rule>> ntTokenRules = new HashMap<>();
+    private final Map<NonTerminal, Map<Rule, List<Token>>> ntRuleTokens = new HashMap<>();
+    public LL1ParserGenerator(List<Rule> rules, List<SimpleToken> simpleTokens, List<TokenRegexFactory> factoryTokens, String typeRes) {
+        this.rules = rules;
+        this.simpleTokens = simpleTokens;
+        this.factoryTokens = factoryTokens;
+        this.typeRes = typeRes;
+        createFirst();
+        createFollow();
+        createNTRules();
+    }
+
+    private static void deleteCommaIfNeeded(StringBuilder code) {
+        if (code.length() > 1 && code.charAt(code.length() - 2) == ',') {
+            code.deleteCharAt(code.length() - 2);
+        }
+    }
 
     public Map<NonTerminal, Set<Token>> first() {
         return first;
@@ -44,21 +63,8 @@ public class LL1ParserGenerator implements ParserGenerator {
         return follow;
     }
 
-    private final Map<NonTerminal, Set<Token>> first = new HashMap<>();
-    private final Map<NonTerminal, Set<Token>> follow = new HashMap<>();
-    private final Map<NonTerminal, Map<Token, Rule>> ntRules = new HashMap<>();
     public Map<NonTerminal, Map<Token, Rule>> ntRules() {
-        return ntRules;
-    }
-
-    public LL1ParserGenerator(List<Rule> rules, List<SimpleToken> simpleTokens, List<TokenRegexFactory> factoryTokens, String typeRes) {
-        this.rules = rules;
-        this.simpleTokens = simpleTokens;
-        this.factoryTokens = factoryTokens;
-        this.typeRes = typeRes;
-        createFirst();
-        createFollow();
-        createNTRules();
+        return ntTokenRules;
     }
 
     private void createFollow() {
@@ -131,7 +137,6 @@ public class LL1ParserGenerator implements ParserGenerator {
         return s;
     }
 
-
     @Override
     public void generate(String generatorName) {
         StringBuilder code = new StringBuilder(imports);
@@ -150,18 +155,18 @@ public class LL1ParserGenerator implements ParserGenerator {
         generateFactoryTokens(code);
         code.append("\tLexicalAnalyzer lex;\n\n");
         generateParseFunction(code);
-        for (NonTerminal nt : ntRules.keySet()) {
-            generateFunction(code, nt, ntRules.get(nt));
+        for (NonTerminal nt : ntTokenRules.keySet()) {
+            generateFunction(code, nt);
         }
         code.append("}\n");
     }
 
-    private void generateFunction(StringBuilder code, NonTerminal nt, Map<Token, Rule> tokenRuleMap) {
+    private void generateFunction(StringBuilder code, NonTerminal nt) {
         code.append("\tprivate Tree<").append(typeRes).append("> ").append(nt.name()).append("(").append(typeRes).append("... values) throws ParseException {\n");
         code.append("\t\tswitch (lex.curToken().name()) {\n");
-        for (Token token: tokenRuleMap.keySet()) {
-            code.append("\t\t\tcase \"").append(token.name()).append("\" -> {\n");
-            generateRule(code, tokenRuleMap.get(token));
+        for (Rule rule : ntRuleTokens.get(nt).keySet()) {
+            code.append("\t\t\tcase ").append(generateTokenList(ntRuleTokens.get(nt).get(rule))).append(" -> {\n");
+            generateRule(code, rule);
             code.append("\t\t\t}\n");
         }
         code.append("\t\t\tdefault -> throw new IllegalStateException(\"Unexpected value: \" + lex.curToken());\n");
@@ -169,11 +174,21 @@ public class LL1ParserGenerator implements ParserGenerator {
         code.append("\t}\n\n");
     }
 
+    private StringBuilder generateTokenList(List<Token> tokens) {
+        StringBuilder sb = new StringBuilder();
+        assert !tokens.isEmpty();
+        sb.append("\"").append(tokens.get(0).name()).append("\"");
+        for (int i = 1; i < tokens.size(); i++) {
+            sb.append(", \"").append(tokens.get(i).name()).append("\"");
+        }
+        return sb;
+    }
+
     private void generateRule(StringBuilder code, Rule rule) {
         if (rule.rightPart().getFirst().equals(epsilon)) {
-            String rc = "Tree<" + typeRes + "> t = new Tree<" +  typeRes + ">(new NonTerminal(\""+ rule.leftPart().name() +"\"));\n";
+            String rc = "Tree<" + typeRes + "> t = new Tree<" + typeRes + ">(new NonTerminal(\"" + rule.leftPart().name() + "\"));\n";
             String rc1 = "return t;\n";
-            code.append("\t\t\t\t").append("// TODO Count value of this node\n");
+//            code.append("\t\t\t\t").append("// TODO Count value of this node\n");
             code.append("\t\t\t\t").append(rc);
             code.append("\t\t\t\t").append(rc1);
             return;
@@ -181,31 +196,32 @@ public class LL1ParserGenerator implements ParserGenerator {
         List<String> commands = new ArrayList<>();
         List<String> nodes = new ArrayList<>();
         int counter = 0;
-        for (Element element: rule.rightPart()) {
+        for (Element element : rule.rightPart()) {
             counter++;
             if (element instanceof NonTerminal) {
                 String var = element.name() + counter;
                 nodes.add(var);
-                String command = "Tree<" + typeRes + "> " + var + " = " + element.name() + "(" + getListVar(counter) + ");\n";
-                String commandVal = typeRes + " value" + counter + " = " + var + ".val();\n";
+                String command = "Tree<" + typeRes + "> " + var + " = " + element.name() + "();\n";
+//                String command = "Tree<" + typeRes + "> " + var + " = " + element.name() + "(" + getListVar(counter) + ");\n";
+//                String commandVal = typeRes + " value" + counter + " = " + var + ".val();\n";
                 commands.add(command);
-                commands.add(commandVal);
+//                commands.add(commandVal);
             } else {
                 Token token = (Token) element;
                 String var = "token" + counter;
                 nodes.add(var);
                 String c1 = "assert lex.curToken().name().equals(\"" + element.name() + "\");\n";
                 String c2 = "Tree<" + typeRes + "> " + var + " = " + "new Tree(lex.curToken());\n";
-                String commandVal = typeRes + " value" + counter + " = " + var + ".val();\n";
+//                String commandVal = typeRes + " value" + counter + " = " + var + ".val();\n";
                 String c3 = "lex.nextToken();\n";
                 commands.add(c1);
                 commands.add(c2);
-                commands.add(commandVal);
+//                commands.add(commandVal);
                 commands.add(c3);
             }
         }
-        commands.add("// TODO Count value of this node\n");
-        String rc = "Tree<" + typeRes + "> t = new Tree<" + typeRes + ">(new NonTerminal(\""+ rule.leftPart().name() +"\")"+ getNodes(nodes)  + ");\n";
+//        commands.add("// TODO Count value of this node\n");
+        String rc = "Tree<" + typeRes + "> t = new Tree<" + typeRes + ">(new NonTerminal(\"" + rule.leftPart().name() + "\")" + getNodes(nodes) + ");\n";
         String rc1 = "return t;\n";
         commands.add(rc);
         commands.add(rc1);
@@ -227,7 +243,7 @@ public class LL1ParserGenerator implements ParserGenerator {
 
     private String getNodes(List<String> nodes) {
         StringBuilder sb = new StringBuilder();
-        for (String node: nodes) {
+        for (String node : nodes) {
             sb.append(", ").append(node);
         }
         return sb.toString();
@@ -243,7 +259,7 @@ public class LL1ParserGenerator implements ParserGenerator {
 
     private void generateFactoryTokens(StringBuilder code) {
         code.append("\tprivate final static List<TokenRegexFactory> factoryTokens = List.of(\n");
-        for (TokenRegexFactory tokenRegexFactory: factoryTokens) {
+        for (TokenRegexFactory tokenRegexFactory : factoryTokens) {
             code.append("\t\tnew TokenRegexFactory(\"").append(tokenRegexFactory.name()).append("\", \"")
                     .append(doubleDashes(tokenRegexFactory.regex())).append("\"),\n");
         }
@@ -266,7 +282,7 @@ public class LL1ParserGenerator implements ParserGenerator {
 
     private void generateSimpleTokens(StringBuilder code) {
         code.append("\tprivate final static List<SimpleToken> simpleTokens = List.of(\n");
-        for (SimpleToken token: simpleTokens) {
+        for (SimpleToken token : simpleTokens) {
             if (token instanceof Symbol) {
                 code.append("\t\tnew Symbol(\"").append(token.name()).append("\", \"")
                         .append(token.value()).append("\"),\n");
@@ -280,12 +296,6 @@ public class LL1ParserGenerator implements ParserGenerator {
         code.append("\t);\n");
     }
 
-    private static void deleteCommaIfNeeded(StringBuilder code) {
-        if (code.length() > 1 && code.charAt(code.length() - 2) == ',') {
-            code.deleteCharAt(code.length() - 2);
-        }
-    }
-
     private void createNTRules() {
         for (Rule rule : rules) {
             Set<Token> s = new HashSet<>(createFirst(rule.rightPart()));
@@ -294,15 +304,18 @@ public class LL1ParserGenerator implements ParserGenerator {
                 s.addAll(follow.get(rule.leftPart()));
             }
             for (Token token : s) {
-                ntRules.putIfAbsent(rule.leftPart(), new HashMap<>());
-                if (ntRules.get(rule.leftPart()).containsKey(token)) {
+                ntTokenRules.putIfAbsent(rule.leftPart(), new HashMap<>());
+                if (ntTokenRules.get(rule.leftPart()).containsKey(token)) {
                     throw new IllegalArgumentException(
                             "There are two rules starting with token '" + token.name() + "': " +
-                                    ntRules.get(rule.leftPart()).get(token).toString() + " and " +
+                                    ntTokenRules.get(rule.leftPart()).get(token).toString() + " and " +
                                     rule
                     );
                 }
-                ntRules.get(rule.leftPart()).put(token, rule);
+                ntTokenRules.get(rule.leftPart()).put(token, rule);
+                ntRuleTokens.putIfAbsent(rule.leftPart(), new HashMap<>());
+                ntRuleTokens.get(rule.leftPart()).putIfAbsent(rule, new ArrayList<>());
+                ntRuleTokens.get(rule.leftPart()).get(rule).add(token);
             }
         }
     }

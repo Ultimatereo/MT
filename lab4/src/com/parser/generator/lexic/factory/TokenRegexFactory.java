@@ -7,11 +7,6 @@ import java.util.regex.Pattern;
 public class TokenRegexFactory extends Token {
     private final String name;
     private final Pattern pattern;
-
-    public String regex() {
-        return regex;
-    }
-
     private final String regex;
 
     public TokenRegexFactory(String name, String regex) {
@@ -19,6 +14,10 @@ public class TokenRegexFactory extends Token {
         this.name = name;
         this.pattern = Pattern.compile(regex);
         this.regex = regex;
+    }
+
+    public String regex() {
+        return regex;
     }
 
     public String name() {
