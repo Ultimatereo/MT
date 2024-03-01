@@ -12,6 +12,7 @@ public class Tree<T> {
     static int counter = 0;
     final Element node;
     final int id;
+
     public T value;
     List<Tree<T>> children;
 
@@ -35,9 +36,9 @@ public class Tree<T> {
     }
 
     public void writeUsing(BufferedWriter writer) throws IOException {
-        writeNode(this.toString(), node, writer);
+        writeNode(this.toString(), node, value, writer);
         for (Tree<T> child : children) {
-            writeNode(child.toString(), child.node, writer);
+            writeNode(child.toString(), child.node, child.value, writer);
             writeEdge(this.toString(), child.toString(), writer);
             child.writeUsing(writer);
         }
@@ -47,7 +48,7 @@ public class Tree<T> {
         writer.write(parent + "->" + childNode + ";\n");
     }
 
-    private void writeNode(String v_name, Element label, BufferedWriter writer) throws IOException {
-        writer.write(v_name + " [label=\"" + label.name() + "\"]\n");
+    private void writeNode(String v_name, Element label, T value, BufferedWriter writer) throws IOException {
+        writer.write(v_name + " [label=\"" + label.name() + "; " + value + "\"]\n");
     }
 }

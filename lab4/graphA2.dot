@@ -1,69 +1,69 @@
 digraph ParserResult {
-"NonTerminal[name=E]_39" [label="E"]
-"NonTerminal[name=T]_37" [label="T"]
+"NonTerminal[name=E]_39" [label="E; null"]
+"NonTerminal[name=T]_37" [label="T; null"]
 "NonTerminal[name=E]_39"->"NonTerminal[name=T]_37";
-"NonTerminal[name=T]_37" [label="T"]
-"NonTerminal[name=F]_31" [label="F"]
+"NonTerminal[name=T]_37" [label="T; null"]
+"NonTerminal[name=F]_31" [label="F; null"]
 "NonTerminal[name=T]_37"->"NonTerminal[name=F]_31";
-"NonTerminal[name=F]_31" [label="F"]
-"Token{name='(', value='('}_17" [label="("]
+"NonTerminal[name=F]_31" [label="F; null"]
+"Token{name='(', value='('}_17" [label="(; null"]
 "NonTerminal[name=F]_31"->"Token{name='(', value='('}_17";
-"Token{name='(', value='('}_17" [label="("]
-"NonTerminal[name=E]_29" [label="E"]
+"Token{name='(', value='('}_17" [label="(; null"]
+"NonTerminal[name=E]_29" [label="E; null"]
 "NonTerminal[name=F]_31"->"NonTerminal[name=E]_29";
-"NonTerminal[name=E]_29" [label="E"]
-"NonTerminal[name=T]_21" [label="T"]
+"NonTerminal[name=E]_29" [label="E; null"]
+"NonTerminal[name=T]_21" [label="T; null"]
 "NonTerminal[name=E]_29"->"NonTerminal[name=T]_21";
-"NonTerminal[name=T]_21" [label="T"]
-"NonTerminal[name=F]_19" [label="F"]
+"NonTerminal[name=T]_21" [label="T; null"]
+"NonTerminal[name=F]_19" [label="F; null"]
 "NonTerminal[name=T]_21"->"NonTerminal[name=F]_19";
-"NonTerminal[name=F]_19" [label="F"]
-"Token{name='n', value='1'}_18" [label="n"]
+"NonTerminal[name=F]_19" [label="F; null"]
+"Token{name='n', value='1'}_18" [label="n; null"]
 "NonTerminal[name=F]_19"->"Token{name='n', value='1'}_18";
-"Token{name='n', value='1'}_18" [label="n"]
-"NonTerminal[name=TT]_20" [label="TT"]
+"Token{name='n', value='1'}_18" [label="n; null"]
+"NonTerminal[name=TT]_20" [label="TT; null"]
 "NonTerminal[name=T]_21"->"NonTerminal[name=TT]_20";
-"NonTerminal[name=TT]_20" [label="TT"]
-"NonTerminal[name=EE]_28" [label="EE"]
+"NonTerminal[name=TT]_20" [label="TT; null"]
+"NonTerminal[name=EE]_28" [label="EE; null"]
 "NonTerminal[name=E]_29"->"NonTerminal[name=EE]_28";
-"NonTerminal[name=EE]_28" [label="EE"]
-"Token{name='+', value='+'}_22" [label="+"]
+"NonTerminal[name=EE]_28" [label="EE; null"]
+"Token{name='+', value='+'}_22" [label="+; null"]
 "NonTerminal[name=EE]_28"->"Token{name='+', value='+'}_22";
-"Token{name='+', value='+'}_22" [label="+"]
-"NonTerminal[name=T]_26" [label="T"]
+"Token{name='+', value='+'}_22" [label="+; null"]
+"NonTerminal[name=T]_26" [label="T; null"]
 "NonTerminal[name=EE]_28"->"NonTerminal[name=T]_26";
-"NonTerminal[name=T]_26" [label="T"]
-"NonTerminal[name=F]_24" [label="F"]
+"NonTerminal[name=T]_26" [label="T; null"]
+"NonTerminal[name=F]_24" [label="F; null"]
 "NonTerminal[name=T]_26"->"NonTerminal[name=F]_24";
-"NonTerminal[name=F]_24" [label="F"]
-"Token{name='n', value='2'}_23" [label="n"]
+"NonTerminal[name=F]_24" [label="F; null"]
+"Token{name='n', value='2'}_23" [label="n; null"]
 "NonTerminal[name=F]_24"->"Token{name='n', value='2'}_23";
-"Token{name='n', value='2'}_23" [label="n"]
-"NonTerminal[name=TT]_25" [label="TT"]
+"Token{name='n', value='2'}_23" [label="n; null"]
+"NonTerminal[name=TT]_25" [label="TT; null"]
 "NonTerminal[name=T]_26"->"NonTerminal[name=TT]_25";
-"NonTerminal[name=TT]_25" [label="TT"]
-"NonTerminal[name=EE]_27" [label="EE"]
+"NonTerminal[name=TT]_25" [label="TT; null"]
+"NonTerminal[name=EE]_27" [label="EE; null"]
 "NonTerminal[name=EE]_28"->"NonTerminal[name=EE]_27";
-"NonTerminal[name=EE]_27" [label="EE"]
-"Token{name=')', value=')'}_30" [label=")"]
+"NonTerminal[name=EE]_27" [label="EE; null"]
+"Token{name=')', value=')'}_30" [label="); null"]
 "NonTerminal[name=F]_31"->"Token{name=')', value=')'}_30";
-"Token{name=')', value=')'}_30" [label=")"]
-"NonTerminal[name=TT]_36" [label="TT"]
+"Token{name=')', value=')'}_30" [label="); null"]
+"NonTerminal[name=TT]_36" [label="TT; null"]
 "NonTerminal[name=T]_37"->"NonTerminal[name=TT]_36";
-"NonTerminal[name=TT]_36" [label="TT"]
-"Token{name='*', value='*'}_32" [label="*"]
+"NonTerminal[name=TT]_36" [label="TT; null"]
+"Token{name='*', value='*'}_32" [label="*; null"]
 "NonTerminal[name=TT]_36"->"Token{name='*', value='*'}_32";
-"Token{name='*', value='*'}_32" [label="*"]
-"NonTerminal[name=F]_34" [label="F"]
+"Token{name='*', value='*'}_32" [label="*; null"]
+"NonTerminal[name=F]_34" [label="F; null"]
 "NonTerminal[name=TT]_36"->"NonTerminal[name=F]_34";
-"NonTerminal[name=F]_34" [label="F"]
-"Token{name='n', value='3'}_33" [label="n"]
+"NonTerminal[name=F]_34" [label="F; null"]
+"Token{name='n', value='3'}_33" [label="n; null"]
 "NonTerminal[name=F]_34"->"Token{name='n', value='3'}_33";
-"Token{name='n', value='3'}_33" [label="n"]
-"NonTerminal[name=TT]_35" [label="TT"]
+"Token{name='n', value='3'}_33" [label="n; null"]
+"NonTerminal[name=TT]_35" [label="TT; null"]
 "NonTerminal[name=TT]_36"->"NonTerminal[name=TT]_35";
-"NonTerminal[name=TT]_35" [label="TT"]
-"NonTerminal[name=EE]_38" [label="EE"]
+"NonTerminal[name=TT]_35" [label="TT; null"]
+"NonTerminal[name=EE]_38" [label="EE; null"]
 "NonTerminal[name=E]_39"->"NonTerminal[name=EE]_38";
-"NonTerminal[name=EE]_38" [label="EE"]
+"NonTerminal[name=EE]_38" [label="EE; null"]
 }

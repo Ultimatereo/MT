@@ -1,36 +1,36 @@
 digraph ParserResult {
-"NonTerminal[name=E]_16" [label="E"]
-"NonTerminal[name=T]_8" [label="T"]
+"NonTerminal[name=E]_16" [label="E; null"]
+"NonTerminal[name=T]_8" [label="T; null"]
 "NonTerminal[name=E]_16"->"NonTerminal[name=T]_8";
-"NonTerminal[name=T]_8" [label="T"]
-"NonTerminal[name=F]_6" [label="F"]
+"NonTerminal[name=T]_8" [label="T; null"]
+"NonTerminal[name=F]_6" [label="F; null"]
 "NonTerminal[name=T]_8"->"NonTerminal[name=F]_6";
-"NonTerminal[name=F]_6" [label="F"]
-"Token{name='n', value='1'}_5" [label="n"]
+"NonTerminal[name=F]_6" [label="F; null"]
+"Token{name='n', value='1'}_5" [label="n; null"]
 "NonTerminal[name=F]_6"->"Token{name='n', value='1'}_5";
-"Token{name='n', value='1'}_5" [label="n"]
-"NonTerminal[name=TT]_7" [label="TT"]
+"Token{name='n', value='1'}_5" [label="n; null"]
+"NonTerminal[name=TT]_7" [label="TT; null"]
 "NonTerminal[name=T]_8"->"NonTerminal[name=TT]_7";
-"NonTerminal[name=TT]_7" [label="TT"]
-"NonTerminal[name=EE]_15" [label="EE"]
+"NonTerminal[name=TT]_7" [label="TT; null"]
+"NonTerminal[name=EE]_15" [label="EE; null"]
 "NonTerminal[name=E]_16"->"NonTerminal[name=EE]_15";
-"NonTerminal[name=EE]_15" [label="EE"]
-"Token{name='+', value='+'}_9" [label="+"]
+"NonTerminal[name=EE]_15" [label="EE; null"]
+"Token{name='+', value='+'}_9" [label="+; null"]
 "NonTerminal[name=EE]_15"->"Token{name='+', value='+'}_9";
-"Token{name='+', value='+'}_9" [label="+"]
-"NonTerminal[name=T]_13" [label="T"]
+"Token{name='+', value='+'}_9" [label="+; null"]
+"NonTerminal[name=T]_13" [label="T; null"]
 "NonTerminal[name=EE]_15"->"NonTerminal[name=T]_13";
-"NonTerminal[name=T]_13" [label="T"]
-"NonTerminal[name=F]_11" [label="F"]
+"NonTerminal[name=T]_13" [label="T; null"]
+"NonTerminal[name=F]_11" [label="F; null"]
 "NonTerminal[name=T]_13"->"NonTerminal[name=F]_11";
-"NonTerminal[name=F]_11" [label="F"]
-"Token{name='n', value='2'}_10" [label="n"]
+"NonTerminal[name=F]_11" [label="F; null"]
+"Token{name='n', value='2'}_10" [label="n; null"]
 "NonTerminal[name=F]_11"->"Token{name='n', value='2'}_10";
-"Token{name='n', value='2'}_10" [label="n"]
-"NonTerminal[name=TT]_12" [label="TT"]
+"Token{name='n', value='2'}_10" [label="n; null"]
+"NonTerminal[name=TT]_12" [label="TT; null"]
 "NonTerminal[name=T]_13"->"NonTerminal[name=TT]_12";
-"NonTerminal[name=TT]_12" [label="TT"]
-"NonTerminal[name=EE]_14" [label="EE"]
+"NonTerminal[name=TT]_12" [label="TT; null"]
+"NonTerminal[name=EE]_14" [label="EE; null"]
 "NonTerminal[name=EE]_15"->"NonTerminal[name=EE]_14";
-"NonTerminal[name=EE]_14" [label="EE"]
+"NonTerminal[name=EE]_14" [label="EE; null"]
 }
