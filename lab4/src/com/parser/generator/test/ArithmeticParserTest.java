@@ -7,6 +7,7 @@ import com.parser.generator.utils.Tree;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
+import java.util.Scanner;
 
 public class ArithmeticParserTest {
     public static void main(String[] args) {
@@ -25,6 +26,19 @@ public class ArithmeticParserTest {
                 System.out.println(e.getMessage());
             }
         }
+
+        Scanner sc = new Scanner(System.in);
+        int i = 10;
+        while (true) {
+            String line = sc.nextLine();
+            try {
+                testParse(line, i);
+                i++;
+            } catch (IOException | IllegalStateException e) {
+                System.out.println(e.getMessage());
+            }
+        }
+
     }
 
     private static void testParse(String test, int i) throws IOException {

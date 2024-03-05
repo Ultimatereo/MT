@@ -14,13 +14,16 @@ import java.util.Set;
 
 public class ArithmeticMain {
     private final static Map<String, NonTerminal> nts = Map.of(
+            "S", new NonTerminal("S"),
+            "S'", new NonTerminal("SS"),
             "E", new NonTerminal("E"),
             "E'", new NonTerminal("EE"),
             "T", new NonTerminal("T"),
             "T'", new NonTerminal("TT"),
             "F", new NonTerminal("F"),
             "ADD", new NonTerminal("ADD"),
-            "MUL", new NonTerminal("MUL")
+            "MUL", new NonTerminal("MUL"),
+            "LOG", new NonTerminal("LOG")
     );
 
     private final static Map<String, Token> ts = Map.of(
@@ -29,7 +32,8 @@ public class ArithmeticMain {
             "(", new Symbol("("),
             ")", new Symbol(")"),
             "n", new Token("n"),
-            "fib", new KeyWord("fib")
+            "fib", new KeyWord("fib"),
+            "//", new Symbol("//")
     );
     private final static List<Rule> rules = List.of(
             new Rule("t.value = EE2.value;\n",
@@ -39,9 +43,9 @@ public class ArithmeticMain {
             new Rule("t.value = values[values.length - 1];\n",
                     nts.get("E'"), LL1ParserGenerator.epsilon),
             new Rule("t.value = TT2.value;\n",
-                    nts.get("T"), nts.get("F"), nts.get("T'")),
+                    nts.get("T"), nts.get("S"), nts.get("T'")),
             new Rule("t.value = TT4.value;\n",
-                    nts.get("T'"), ts.get("*"), nts.get("F"), nts.get("MUL"), nts.get("T'")),
+                    nts.get("T'"), ts.get("*"), nts.get("S"), nts.get("MUL"), nts.get("T'")),
             new Rule("t.value = values[values.length - 1];\n",
                     nts.get("T'"), LL1ParserGenerator.epsilon),
             new Rule("t.value = Integer.parseInt(((Token) token1.node).value());\n",
@@ -56,7 +60,7 @@ public class ArithmeticMain {
                     Integer n = E3.value;
                     \t\t\t\tint fib = 1;
                     \t\t\t\tint prevFib = 1;
-                    
+                                        
                     \t\t\t\tfor (int i = 2; i < n; i++) {
                     \t\t\t\t    int temp = fib;
                     \t\t\t\t    fib += prevFib;
@@ -64,7 +68,25 @@ public class ArithmeticMain {
                     \t\t\t\t}
                     \t\t\t\tt.value = fib;
                     """,
-                    nts.get("F"), ts.get("fib"), ts.get("("), nts.get("E"), ts.get(")"))
+                    nts.get("F"), ts.get("fib"), ts.get("("), nts.get("E"), ts.get(")")),
+            new Rule("""
+                    if (value2 == null) {
+                    \t\t\t\t    t.value = value1;
+                    \t\t\t\t} else {
+                    \t\t\t\t    t.value = value2;
+                    \t\t\t\t}
+                    """,
+                    nts.get("S"), nts.get("F"), nts.get("S'")),
+            new Rule("""
+                    if (value3 == null) {
+                    \t\t\t\t    t.value = (int) (Math.log(values[values.length - 1]) / Math.log(value2));
+                    \t\t\t\t} else {
+                    \t\t\t\t    t.value = (int) (Math.log(values[values.length - 1]) / Math.log(value3));
+                    \t\t\t\t}
+                    """,
+                    nts.get("S'"), ts.get("//"), nts.get("F"), nts.get("S'")),
+            new Rule("",
+                    nts.get("S'"), LL1ParserGenerator.epsilon)
     );
 
     private final static List<Rule> notLL1Rules = List.of(
@@ -80,7 +102,8 @@ public class ArithmeticMain {
             (SimpleToken) ts.get("*"),
             (SimpleToken) ts.get("("),
             (SimpleToken) ts.get(")"),
-            (SimpleToken) ts.get("fib")
+            (SimpleToken) ts.get("fib"),
+            (SimpleToken) ts.get("//")
     );
     private final static List<TokenRegexFactory> factoryTokens = List.of(
             new TokenRegexFactory("n", "\\d+")
